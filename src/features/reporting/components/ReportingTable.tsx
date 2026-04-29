@@ -239,7 +239,6 @@ export function ReportingTable({ tableData, tableDataLoading, tableDataError }: 
         }));
     }, [tableData]);
 
-    console.log('formatedData', formatedData)
     return (
         <Card className="border-border bg-card/60 backdrop-blur-sm">
             <CardHeader>

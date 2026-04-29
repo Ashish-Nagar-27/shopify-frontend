@@ -27,7 +27,7 @@ export function PricingCard({
 }: PricingCardProps) {
     return (
         <Card
-            className={`relative flex flex-col overflow-hidden transition-all duration-300 ${isPopular
+            className={`relative flex flex-col h-full overflow-hidden transition-all duration-300 ${isPopular
                     ? "border-primary shadow-xl shadow-primary/10 scale-105 z-10"
                     : "border-border hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5"
                 } bg-card/60 backdrop-blur-xl`}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { billingApi } from "../api/billingApi";
 import { PricingCard } from "../components/PricingCard";
@@ -14,8 +14,14 @@ const ENHANCED_PLANS: Record<string, string[]> = {
     "enterprise": ["2M views", "Full attr", "Custom dash", "Dedic. support"],
 };
 
-export function PricingPage() {
-    const { user, logout } = useAuthStore();
+export function PricingPage({ 
+    embedded = false,
+    onPlanActive 
+}: { 
+    embedded?: boolean;
+    onPlanActive?: (planId: string) => void;
+} = {}) {
+    const { user } = useAuthStore();
     const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
 
     const { data: plansData, isLoading: isLoadingPlans } = useQuery({
@@ -24,9 +30,9 @@ export function PricingPage() {
     });
 
     const { data: statusData } = useQuery({
-        queryKey: ["billing-status", user?.shopId],
-        queryFn: () => billingApi.getStatus(user!.shopId!),
-        enabled: !!user?.shopId,
+        queryKey: ["billing-status", user?.id],
+        queryFn: () => billingApi.getStatus(user!.id!),
+        enabled: !!user?.id,
     });
 
     const subscribeMutation = useMutation({
@@ -57,9 +63,15 @@ export function PricingPage() {
 
     const activePlanId = statusData?.subscription?.planId;
 
+    useEffect(() => {
+        if (activePlanId && onPlanActive) {
+            onPlanActive(activePlanId);
+        }
+    }, [activePlanId, onPlanActive]);
+
     return (
-        <div className="min-h-svh bg-background flex flex-col">
-            <main className="mx-auto max-w-7xl px-6 py-12 flex-1 w-full">
+        <div className={embedded ? "w-full flex flex-col" : "min-h-svh bg-background flex flex-col"}>
+            <main className={`mx-auto w-full ${embedded ? "py-2" : "max-w-7xl px-6 py-12 flex-1"}`}>
                 <div className="text-center mb-16">
                     <h1 className="text-4xl font-extrabold tracking-tight text-foreground mb-4">
                         Choose Your Plan
@@ -78,7 +90,7 @@ export function PricingPage() {
                         </svg>
                     </div>
                 ) : (
-                    <div className="grid gap-8 max-w-fit mx-auto sm:grid-cols-2 lg:grid-cols-4 items-center">
+                    <div className="grid gap-8 max-w-fit mx-auto sm:grid-cols-2 lg:grid-cols-4 items-stretch">
                         {plansData?.plans?.map((plan) => {
                             // Injecting UI specific mock array into the plan object for display
                             const displayPlan = {
@@ -91,7 +103,7 @@ export function PricingPage() {
                                     key={plan.id}
                                     plan={displayPlan}
                                     isCurrentPlan={activePlanId === plan.id}
-                                    isPopular={plan.displayName.toLowerCase().includes("growth")}
+                                    isPopular={plan?.displayName?.toLowerCase()?.includes("growth")}
                                     isLoading={subscribeMutation.isPending && selectedPlanId === plan.id}
                                     onSelect={handleSelectPlan}
                                 />

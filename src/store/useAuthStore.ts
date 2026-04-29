@@ -9,8 +9,9 @@ interface AuthState {
     isAuthenticated: boolean;
     isLoading: boolean;
     login: (credentials: LoginCredentials) => Promise<void>;
-    register: (credentials: RegisterCredentials) => Promise<void>;
+    register: (credentials: RegisterCredentials) => Promise<any>;
     logout: () => void;
+    setTokens: (tokens: AuthTokens) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -25,7 +26,6 @@ export const useAuthStore = create<AuthState>()(
                 set({ isLoading: true });
                 try {
                     const data = await authApi.login(credentials);
-                    console.log('data ', data)
                     set({
                         user: {
                             id: data.user_id,
@@ -48,18 +48,8 @@ export const useAuthStore = create<AuthState>()(
                 set({ isLoading: true });
                 try {
                     const data = await authApi.register(credentials);
-                    set({
-                        user: {
-                            id: data.user_id,
-                            adminid: data.adminid,
-                            is_admin: data.is_admin,
-                            isleadgen: data.isleadgen,
-                            onboarding_status: data.onboarding_status,
-                        },
-                        tokens: data.tokens,
-                        isAuthenticated: true,
-                        isLoading: false,
-                    });
+                    set({ isLoading: false });
+                    return data;
                 } catch (error) {
                     set({ isLoading: false });
                     throw error;
@@ -68,6 +58,10 @@ export const useAuthStore = create<AuthState>()(
 
             logout: () => {
                 set({ user: null, tokens: null, isAuthenticated: false });
+            },
+
+            setTokens: (tokens) => {
+                set({ tokens });
             },
         }),
         {

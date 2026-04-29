@@ -13,7 +13,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useDateStore } from "@/store/useDateStore";
-import { format } from "date-fns";
+
 import { DateRangePickerControlled } from "./DateRangePickerControlled";
 
 /**
@@ -71,9 +71,7 @@ interface HeaderProps {
 
 export default function Header({ title, subtitle }: HeaderProps) {
     const { pathname } = useLocation();
-    const { user, logout, ...rest } = useAuthStore();
-    console.log('user ', user)
-    console.log('rest ', rest)
+    const { user, logout } = useAuthStore();
     // Resolve page meta from props → route map → fallback
     const meta = PAGE_META[pathname];
     const pageTitle = title ?? meta?.title ?? "Trackocity";
@@ -89,7 +87,6 @@ export default function Header({ title, subtitle }: HeaderProps) {
         .slice(0, 2);
 
     const today = new Date();
-    const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 
     // Match route to defined store keys
     type StoreKeys = "dashboardDates" | "reportingDates" | "creativeDates" | "settingDates";
@@ -110,8 +107,7 @@ export default function Header({ title, subtitle }: HeaderProps) {
     const handleApply = (start: string | undefined, end: string | undefined) => {
         store.setDateRange(storeKey, [start, end]);
 
-        console.log(`startdate : ${start ?? null}`)
-        console.log(`enddate: ${end ?? null}`)
+       
         // fire your API call, update zustand store, etc.
     }
 

@@ -1,11 +1,11 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuthStore } from "@/store/useAuthStore";
 
-export function AuthLayout() {
+export function ProtectedRoute() {
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
-    if (isAuthenticated) {
-        return <Navigate to="/reporting" replace />;
+    if (!isAuthenticated) {
+        return <Navigate to="/login" replace />;
     }
 
     return <Outlet />;

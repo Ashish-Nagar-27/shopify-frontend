@@ -7,6 +7,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { AuthLayout } from "../components/AuthLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Eye, EyeOff } from "lucide-react";
 import {
     Form,
     FormControl,
@@ -15,6 +16,7 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
+import { toast } from "sonner";
 
 const loginSchema = z.object({
     username: z.string().email("Enter a valid email address"),
@@ -27,6 +29,7 @@ export function LoginPage() {
     const navigate = useNavigate();
     const { login, isLoading } = useAuthStore();
     const [formError, setFormError] = useState<string | null>(null);
+    const [showPassword, setShowPassword] = useState(false);
 
     const form = useForm<LoginValues>({
         resolver: zodResolver(loginSchema),
@@ -40,7 +43,8 @@ export function LoginPage() {
         setFormError(null);
         try {
             await login(data);
-            navigate("/reporting", { replace: true });
+            navigate("/onboarding", { replace: true });
+            toast.success("Login Successfull");
         } catch (error) {
             console.error("Login failed:", error);
             setFormError("Invalid email or password. Please try again.");
@@ -83,13 +87,34 @@ export function LoginPage() {
                         name="password"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Password</FormLabel>
+                                <div className="flex flex-row items-center justify-between">
+                                    <FormLabel>Password</FormLabel>
+                                    <Link 
+                                        to="/forgot-password" 
+                                        className="text-sm font-medium text-primary hover:text-primary/80"
+                                    >
+                                        Forgot password?
+                                    </Link>
+                                </div>
                                 <FormControl>
-                                    <Input
-                                        placeholder="••••••••"
-                                        type="password"
-                                        {...field}
-                                    />
+                                    <div className="relative">
+                                        <Input
+                                            placeholder="••••••••"
+                                            type={showPassword ? "text" : "password"}
+                                            {...field}
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowPassword((prev) => !prev)}
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                        >
+                                            {showPassword ? (
+                                                <EyeOff className="h-4 w-4" />
+                                            ) : (
+                                                <Eye className="h-4 w-4" />
+                                            )}
+                                        </button>
+                                    </div>
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

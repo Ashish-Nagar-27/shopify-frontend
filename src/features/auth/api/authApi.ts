@@ -7,7 +7,15 @@ export const authApi = {
         return response.data;
     },
     register: async (credentials: RegisterCredentials): Promise<LoginResponse> => {
-        const response = await api.post<LoginResponse>("/auth/register", credentials);
+        const response = await api.post<LoginResponse>("/auth/create", credentials);
+        return response.data;
+    },
+    forgotPassword: async (email: string): Promise<{ message: string }> => {
+        const response = await api.post<{ message: string }>("/auth/forgetpassword", { username: email });
+        return response.data;
+    },
+    resetPassword: async (data: { refreshtoken: string; newpassword: string }): Promise<{ message: string }> => {
+        const response = await api.post<{ message: string }>("/auth/resetpassword", data);
         return response.data;
     },
 };

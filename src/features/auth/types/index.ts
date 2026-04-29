@@ -4,6 +4,7 @@ export interface User {
     is_admin: boolean;
     isleadgen: boolean;
     onboarding_status: string;
+    isConnected?: boolean;
 }
 
 export interface AuthTokens {
