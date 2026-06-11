@@ -1,138 +1,64 @@
-import { LayoutDashboard, BarChart3, Palette, Settings, UserCircle, CreditCard, Zap, ChevronRight, Eye, BrainCircuit, Users } from "lucide-react"
-import { useState } from "react"
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubItem,
-  SidebarMenuSubButton,
-  useSidebar,
-} from "@/components/ui/sidebar"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { Link } from "react-router-dom"
-
-// Dashboard sub-items
-const dashboardSubItems = [
-  { title: "Overview", url: "/dashboard/overview", icon: Eye },
-  { title: "AI Insight", url: "/dashboard/ai-insight", icon: BrainCircuit },
-  { title: "Demographic", url: "/dashboard/demographic", icon: Users },
-]
-
-// Other menu items (flat links)
-const items = [
-  {
-    title: "Reporting",
-    url: "/reporting",
-    icon: BarChart3,
-  },
-  {
-    title: "Creative",
-    url: "/creative",
-    icon: Palette,
-  },
-  {
-    title: "Settings",
-    url: "/settings",
-    icon: Settings,
-  },
-  {
-    title: "Profile",
-    url: "/profile",
-    icon: UserCircle,
-  },
-  {
-    title: "Billing",
-    url: "/pricing",
-    icon: CreditCard,
-  },
-]
+import { Link, useLocation } from 'react-router-dom';
+import * as Icon from '@/components/icons';
 
 export function AppSidebar() {
-  const { setOpen } = useSidebar()
-  const [dashboardOpen, setDashboardOpen] = useState(false)
+  const location = useLocation();
+  const items = [
+    { key: "dash",   icon: <Icon.grid     width="18" height="18" />, label: "Dashboard", href: "/dashboard"     },
+    { key: "report", icon: <Icon.chart    width="18" height="18" />, label: "Reporting", href: "/reporting" },
+    { key: "aud",    icon: <Icon.audience width="18" height="18" />, label: "Audiences", href: "/audiences" },
+    { key: "expl",   icon: <Icon.search   width="18" height="18" />, label: "Explore"   , href: "/explore"           },
+    { key: "onboarding",    icon: <Icon.funnel   width="18" height="18" />, label: "Onboarding"   , href: "/onboarding"           },
+  ];
 
   return (
-    <div
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
-      className="fixed top-0 left-0 z-50 h-full "
-    >
-      <Sidebar variant="sidebar" collapsible="icon">
+    <aside className="w-[72px] sticky top-0 h-screen bg-[linear-gradient(180deg,var(--bg-deep),oklch(0.10_0.018_240))] border-r border-border-soft flex flex-col items-center py-[14px] gap-[6px] z-[5]">
+      <Link
+        to="/"
+        className="w-11 h-11 rounded-[11px] bg-[linear-gradient(135deg,var(--bg-deep),oklch(0.20_0.04_220))] grid place-items-center overflow-hidden mb-3 no-underline shadow-[0_0_0_1px_var(--border-soft),0_8px_18px_-10px_oklch(0_0_0/0.6)]"
+        title="Pumalyze">
+        <span className="text-cyan font-bold text-[18px]">P</span>
+      </Link>
 
-        <SidebarHeader className="my-2">
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton size="lg" asChild>
-                <Link to="/">
-                  <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-indigo-600 text-white">
-                    <Zap className="size-4" />
-                  </div>
-                  <div className="flex flex-col gap-0.5 leading-none">
-                    <span className="font-semibold">Trackocity</span>
-                    <span className="text-xs text-muted-foreground">Analytics</span>
-                  </div>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarHeader>
+      <nav className="flex flex-col gap-0.5 flex-1 items-center pt-[6px]">
+        {items.map((it) => {
+          const isActive = location.pathname.startsWith(it.href);
+          return (
+            <Link
+              key={it.key}
+              to={it.href}
+              className={[
+                'relative w-11 h-11 rounded-[10px] grid place-items-center no-underline transition-[color,background] duration-150',
+                isActive
+                  ? 'text-[oklch(0.10_0.018_240)] bg-[linear-gradient(135deg,var(--cyan),var(--cyan-deep))] shadow-[0_0_0_1px_var(--cyan-deep),0_8px_20px_-8px_oklch(0.68_0.16_210/0.5)]'
+                  : 'text-fg-mute hover:text-fg hover:bg-surface',
+              ].join(' ')}
+              title={it.label}>
+              {isActive && (
+                <span className="absolute left-[-14px] top-[10px] bottom-[10px] w-[3px] rounded-[0_3px_3px_0] bg-cyan shadow-[0_0_12px_var(--cyan)]" />
+              )}
+              {it.icon}
+            </Link>
+          );
+        })}
+      </nav>
 
-        <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {/* Dashboard with collapsible sub-items */}
-                <Collapsible asChild open={dashboardOpen} onOpenChange={setDashboardOpen} className="group/collapsible">
-                  <SidebarMenuItem
-                  // onMouseEnter={() => setDashboardOpen(true)}
-                  // onMouseLeave={() => setDashboardOpen(false)}
-                  >
-                    <CollapsibleTrigger asChild>
-                      <SidebarMenuButton>
-                        <LayoutDashboard />
-                        <span>Dashboard</span>
-                        <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                      </SidebarMenuButton>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent>
-                      <SidebarMenuSub>
-                        {dashboardSubItems.map((sub) => (
-                          <SidebarMenuSubItem key={sub.title}>
-                            <SidebarMenuSubButton asChild>
-                              <Link to={sub.url}>
-                                <sub.icon className="size-4" />
-                                <span>{sub.title}</span>
-                              </Link>
-                            </SidebarMenuSubButton>
-                          </SidebarMenuSubItem>
-                        ))}
-                      </SidebarMenuSub>
-                    </CollapsibleContent>
-                  </SidebarMenuItem>
-                </Collapsible>
-
-                {/* Other flat menu items */}                {items.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <Link to={item.url}>
-                        <item.icon />
-                        <span>{item.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-      </Sidebar>
-    </div>
-  )
+      <div className="flex flex-col gap-0.5 items-center pb-[6px]">
+        <Link
+          to="/settings"
+          className={[
+            'relative w-11 h-11 rounded-[10px] grid place-items-center no-underline transition-[color,background] duration-150',
+            location.pathname.startsWith('/settings')
+              ? 'text-[oklch(0.10_0.018_240)] bg-[linear-gradient(135deg,var(--cyan),var(--cyan-deep))] shadow-[0_0_0_1px_var(--cyan-deep),0_8px_20px_-8px_oklch(0.68_0.16_210/0.5)]'
+              : 'text-fg-mute hover:text-fg hover:bg-surface',
+          ].join(' ')}
+          title="Settings">
+          {location.pathname.startsWith('/settings') && (
+            <span className="absolute left-[-14px] top-[10px] bottom-[10px] w-[3px] rounded-[0_3px_3px_0] bg-cyan shadow-[0_0_12px_var(--cyan)]" />
+          )}
+          <Icon.settings width="18" height="18" />
+        </Link>
+      </div>
+    </aside>
+  );
 }

@@ -13,6 +13,7 @@ export function ShopifyStep({
     error,
     handleConnectShopify,
 }: Pick<UseOnboardingReturn, "shopifyConnected" | "isLoading" | "shopDomain" | "setShopDomain" | "error" | "handleConnectShopify">) {
+    console.log('shopdomain', shopDomain)
     return (
         <div className="flex flex-col gap-4">
             <ShopifyIcon />
@@ -24,9 +25,14 @@ export function ShopifyStep({
                 right campaign.
             </p>
             {shopifyConnected ? (
-                <Badge variant="outline" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border-[1.5px] border-primary/50 bg-primary/8 text-primary font-semibold text-[15px] w-fit">
-                    <CheckIcon /> <span>Shopify is connected</span>
-                </Badge>
+                <div className="flex flex-col gap-3">
+                    <Badge variant="outline" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border-[1.5px] border-primary/50 bg-primary/8 text-primary font-semibold text-[15px] w-fit">
+                        <CheckIcon /> <span>Shopify is connected</span>
+                    </Badge>
+                    <Button variant="ghost" size="sm" onClick={() => handleConnectShopify()}>
+                        Reconnect
+                    </Button>
+                </div>
             ) : (
                 <div className="flex flex-col gap-3 max-w-[320px]">
                     <Input

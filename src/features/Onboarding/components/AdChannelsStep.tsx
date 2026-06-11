@@ -3,6 +3,21 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { GoogleIcon, MetaIcon, CheckIcon } from "./icons";
 import type { UseOnboardingReturn } from "../types/onboarding.types";
+import { useGoogleAuth } from "../hooks/useGoogleAuth";
+import { useMetaAuth } from "../hooks/useMetaAuth";
+import { SelectAccountsModal } from "./SelectAccountsModal";
+
+export interface AdChannelsStepProps {
+    googleConnected: boolean;
+    metaConnected: boolean;
+    connectingGoogle: boolean;
+    connectingMeta: boolean;
+    simulateConnect: UseOnboardingReturn["simulateConnect"];
+    setGoogleConnected: UseOnboardingReturn["setConnectingGoogle"];
+    setConnectingGoogle: UseOnboardingReturn["setConnectingGoogle"];
+    setMetaConnected: UseOnboardingReturn["setConnectingMeta"];
+    setConnectingMeta: UseOnboardingReturn["setConnectingMeta"];
+}
 
 export function AdChannelsStep({
     googleConnected,
@@ -14,18 +29,23 @@ export function AdChannelsStep({
     setConnectingGoogle,
     setMetaConnected,
     setConnectingMeta,
-}: Pick<
-    UseOnboardingReturn,
-    | "googleConnected"
-    | "metaConnected"
-    | "connectingGoogle"
-    | "connectingMeta"
-    | "simulateConnect"
-    | "setGoogleConnected"
-    | "setConnectingGoogle"
-    | "setMetaConnected"
-    | "setConnectingMeta"
->) {
+}: AdChannelsStepProps) {
+    const { 
+        connectGoogleAds, 
+        extractedAccounts: googleAccounts, 
+        isModalOpen: isGoogleModalOpen, 
+        closeModal: closeGoogleModal,
+        handleAccountsSubmit: handleGoogleAccountsSubmit
+    } = useGoogleAuth({ setConnectingGoogle, setGoogleConnected });
+
+    const { 
+        connectMetaAds,
+        extractedAccounts: metaAccounts,
+        isModalOpen: isMetaModalOpen,
+        closeModal: closeMetaModal,
+        handleAccountsSubmit: handleMetaAccountsSubmit
+    } = useMetaAuth({ setConnectingMeta, setMetaConnected });
+
     return (
         <div className="flex flex-col gap-4">
             <h2 className="text-2xl font-bold tracking-tight text-foreground">
@@ -52,7 +72,7 @@ export function AdChannelsStep({
                             size="sm"
                             className="px-5 font-bold transition-opacity hover:opacity-90"
                             disabled={connectingGoogle}
-                            onClick={() => simulateConnect(setGoogleConnected, setConnectingGoogle)}
+                            onClick={connectGoogleAds}
                         >
                             {connectingGoogle ? <Loader2 className="w-4 h-4 animate-spin" /> : "Connect"}
                         </Button>
@@ -76,13 +96,29 @@ export function AdChannelsStep({
                             size="sm"
                             className="px-5 font-bold transition-opacity hover:opacity-90"
                             disabled={connectingMeta}
-                            onClick={() => simulateConnect(setMetaConnected, setConnectingMeta)}
+                            onClick={connectMetaAds}
                         >
                             {connectingMeta ? <Loader2 className="w-4 h-4 animate-spin" /> : "Connect"}
                         </Button>
                     )}
                 </Card>
             </div>
+
+            <SelectAccountsModal
+                isOpen={isGoogleModalOpen}
+                onClose={closeGoogleModal}
+                accounts={googleAccounts}
+                channelName="Google Ads"
+                onSubmit={handleGoogleAccountsSubmit}
+            />
+
+            <SelectAccountsModal
+                isOpen={isMetaModalOpen}
+                onClose={closeMetaModal}
+                accounts={metaAccounts}
+                channelName="Meta Ads"
+                onSubmit={handleMetaAccountsSubmit}
+            />
         </div>
     );
 }

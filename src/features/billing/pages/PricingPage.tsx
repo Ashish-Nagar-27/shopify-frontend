@@ -4,6 +4,7 @@ import { billingApi } from "../api/billingApi";
 import { PricingCard } from "../components/PricingCard";
 import type { Plan } from "../types";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useLocation } from "react-router-dom";
 
 // Note: Typically you would fetch features from the backend or hardcode them if static
 // For the UI rendering, we'll map common plans as described by the backend rules
@@ -24,6 +25,10 @@ export function PricingPage({
     const { user } = useAuthStore();
     const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
 
+    const location = useLocation();
+    const isOnboardingUser = location.pathname.includes("/onboarding");
+   
+
     const { data: plansData, isLoading: isLoadingPlans } = useQuery({
         queryKey: ["billing-plans"],
         queryFn: billingApi.getPlans,
@@ -37,7 +42,7 @@ export function PricingPage({
 
     const subscribeMutation = useMutation({
         mutationFn: ({ planId }: { planId: string }) =>
-            billingApi.subscribe(planId),
+            billingApi.subscribe(planId, isOnboardingUser ? "onboarding" : "pricing" ),
         onSuccess: (data) => {
             if (data.confirmationUrl) {
                 window.location.href = data.confirmationUrl;

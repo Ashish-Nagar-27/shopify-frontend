@@ -1,146 +1,176 @@
 
 
-import * as React from "react"
-import { format, parse, isValid } from "date-fns"
-import { Calendar as CalendarIcon } from "lucide-react"
-import type { DateRange, Matcher } from "react-day-picker"
+// import * as React from "react"
+// import { format, parse, isValid } from "date-fns"
+// import { Calendar as CalendarIcon } from "lucide-react"
+// import type { DateRange, Matcher } from "react-day-picker"
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
+import { useState } from "react";
+import { CalendarPopover, today, type DateRange } from "./CalendarPopover";
 
-interface DateRangePickerControlledProps {
-    startDate: string | undefined
-    endDate: string | undefined
-    onApply: (startDate: string | undefined, endDate: string | undefined) => void
-    disabled?: Matcher | Matcher[]
-    numberOfMonths?: number
-    className?: string
-    endMonth?: Date
-}
 
-export function DateRangePickerControlled({
-    startDate,
-    endDate,
-    onApply,
-    disabled,
-    numberOfMonths = 2,
-    className,
-    endMonth,
-}: DateRangePickerControlledProps) {
-    const [open, setOpen] = React.useState(false)
+// import { cn } from "@/lib/utils"
+// import { Button } from "@/components/ui/button"
+// import { Calendar } from "@/components/ui/calendar"
+// import {
+//     Popover,
+//     PopoverContent,
+//     PopoverTrigger,
+// } from "@/components/ui/popover"
 
-    const parsedStart = (() => {
-        if (!startDate) return undefined;
-        const parsed = parse(startDate, "MMM dd yyyy", new Date());
-        return isValid(parsed) ? parsed : undefined;
-    })();
+// interface DateRangePickerControlledProps {
+//     startDate: string | undefined
+//     endDate: string | undefined
+//     onApply: (startDate: string | undefined, endDate: string | undefined) => void
+//     disabled?: Matcher | Matcher[]
+//     numberOfMonths?: number
+//     className?: string
+//     endMonth?: Date
+// }
 
-    const parsedEnd = (() => {
-        if (!endDate) return undefined;
-        const parsed = parse(endDate, "MMM dd yyyy", new Date());
-        return isValid(parsed) ? parsed : undefined;
-    })();
+// export function DateRangePickerControlled({
+//     startDate,
+//     endDate,
+//     onApply,
+//     disabled,
+//     numberOfMonths = 2,
+//     className,
+//     endMonth,
+// }: DateRangePickerControlledProps) {
+//     const [open, setOpen] = React.useState(false)
 
-    // draft state — only lives while popover is open
-    const [draft, setDraft] = React.useState<DateRange | undefined>(undefined)
+//     const parsedStart = (() => {
+//         if (!startDate) return undefined;
+//         const parsed = parse(startDate, "MMM dd yyyy", new Date());
+//         return isValid(parsed) ? parsed : undefined;
+//     })();
 
-    // track if user has started selecting (touched the calendar)
-    const [isDirty, setIsDirty] = React.useState(false)
+//     const parsedEnd = (() => {
+//         if (!endDate) return undefined;
+//         const parsed = parse(endDate, "MMM dd yyyy", new Date());
+//         return isValid(parsed) ? parsed : undefined;
+//     })();
 
-    // when popover opens, initialize draft from committed props
-    const handleOpenChange = (nextOpen: boolean) => {
-        if (nextOpen) {
-            // opening — seed draft with current committed values
-            setDraft(
-                parsedStart || parsedEnd
-                    ? { from: parsedStart, to: parsedEnd }
-                    : undefined
-            )
-            setIsDirty(false)
-        } else {
-            // closing via outside click / escape — treat as cancel
-            // no-op, just close. committed state stays untouched.
-        }
-        setOpen(nextOpen)
-    }
+//     // draft state — only lives while popover is open
+//     const [draft, setDraft] = React.useState<DateRange | undefined>(undefined)
 
-    const handleSelect = (range: DateRange | undefined) => {
-        setDraft(range)
-        setIsDirty(true)
-    }
+//     // track if user has started selecting (touched the calendar)
+//     const [isDirty, setIsDirty] = React.useState(false)
 
-    const handleApply = () => {
-        const formattedStart = draft?.from ? format(draft.from, "MMM dd yyyy") : undefined;
-        const formattedEnd = draft?.to ? format(draft.to, "MMM dd yyyy") : undefined;
-        onApply(formattedStart, formattedEnd)
-        setOpen(false)
-    }
+//     // when popover opens, initialize draft from committed props
+//     const handleOpenChange = (nextOpen: boolean) => {
+//         if (nextOpen) {
+//             // opening — seed draft with current committed values
+//             setDraft(
+//                 parsedStart || parsedEnd
+//                     ? { from: parsedStart, to: parsedEnd }
+//                     : undefined
+//             )
+//             setIsDirty(false)
+//         } else {
+//             // closing via outside click / escape — treat as cancel
+//             // no-op, just close. committed state stays untouched.
+//         }
+//         setOpen(nextOpen)
+//     }
 
-    const handleCancel = () => {
-        // discard draft, close
-        setDraft(
-            parsedStart || parsedEnd
-                ? { from: parsedStart, to: parsedEnd }
-                : undefined
-        )
-        setIsDirty(false)
-        setOpen(false)
-    }
+//     const handleSelect = (range: DateRange | undefined) => {
+//         setDraft(range)
+//         setIsDirty(true)
+//     }
 
-    // what to show on the trigger button — always the COMMITTED state
-    const displayText = React.useMemo(() => {
-        if (!parsedStart) return null
-        if (parsedEnd) {
-            return `${format(parsedStart, "LLL dd, y")} - ${format(parsedEnd, "LLL dd, y")}`
-        }
-        return format(parsedStart, "LLL dd, y")
-    }, [parsedStart, parsedEnd])
+//     const handleApply = () => {
+//         const formattedStart = draft?.from ? format(draft.from, "MMM dd yyyy") : undefined;
+//         const formattedEnd = draft?.to ? format(draft.to, "MMM dd yyyy") : undefined;
+//         onApply(formattedStart, formattedEnd)
+//         setOpen(false)
+//     }
 
-    // apply is enabled only when user has selected both from & to
-    const canApply = isDirty && draft?.from && draft?.to
+//     const handleCancel = () => {
+//         // discard draft, close
+//         setDraft(
+//             parsedStart || parsedEnd
+//                 ? { from: parsedStart, to: parsedEnd }
+//                 : undefined
+//         )
+//         setIsDirty(false)
+//         setOpen(false)
+//     }
 
-    return (
-        <div className={cn("grid gap-2", className)}>
-            <Popover open={open} onOpenChange={handleOpenChange}>
-                <PopoverTrigger asChild>
-                    <Button
-                        variant="outline"
-                        data-empty={!parsedStart}
-                        className="w-[300px] justify-start text-left font-normal data-[empty=true]:text-muted-foreground"
-                    >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {displayText ?? <span>Pick a date range</span>}
-                    </Button>
-                </PopoverTrigger>
+//     // what to show on the trigger button — always the COMMITTED state
+//     const displayText = React.useMemo(() => {
+//         if (!parsedStart) return null
+//         if (parsedEnd) {
+//             return `${format(parsedStart, "LLL dd, y")} - ${format(parsedEnd, "LLL dd, y")}`
+//         }
+//         return format(parsedStart, "LLL dd, y")
+//     }, [parsedStart, parsedEnd])
 
-                <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                        mode="range"
-                        defaultMonth={draft?.from}
-                        selected={draft}
-                        onSelect={handleSelect}
-                        numberOfMonths={numberOfMonths}
-                        disabled={disabled}
-                        endMonth={endMonth}
-                    />
+//     // apply is enabled only when user has selected both from & to
+//     const canApply = isDirty && draft?.from && draft?.to
 
-                    {/* Apply / Cancel footer */}
-                    <div className="flex items-center justify-end gap-2 border-t px-4 py-3">
-                        <Button variant="ghost" size="sm" onClick={handleCancel}>
-                            Cancel
-                        </Button>
-                        <Button size="sm" disabled={!canApply} onClick={handleApply}>
-                            Apply
-                        </Button>
-                    </div>
-                </PopoverContent>
-            </Popover>
-        </div>
-    )
-}
+//     return (
+//         <div className={cn("grid gap-2", className)}>
+//             <Popover open={open} onOpenChange={handleOpenChange}>
+//                 <PopoverTrigger asChild>
+//                     <Button
+//                         variant="outline"
+//                         data-empty={!parsedStart}
+//                         className="w-[300px] justify-start text-left font-normal data-[empty=true]:text-muted-foreground"
+//                     >
+//                         <CalendarIcon className="mr-2 h-4 w-4" />
+//                         {displayText ?? <span>Pick a date range</span>}
+//                     </Button>
+//                 </PopoverTrigger>
+
+//                 <PopoverContent className="w-auto p-0" align="start">
+//                     <Calendar
+//                         mode="range"
+//                         defaultMonth={draft?.from}
+//                         selected={draft}
+//                         onSelect={handleSelect}
+//                         numberOfMonths={numberOfMonths}
+//                         disabled={disabled}
+//                         endMonth={endMonth}
+//                     />
+
+//                     {/* Apply / Cancel footer */}
+//                     <div className="flex items-center justify-end gap-2 border-t px-4 py-3">
+//                         <Button variant="ghost" size="sm" onClick={handleCancel}>
+//                             Cancel
+//                         </Button>
+//                         <Button size="sm" disabled={!canApply} onClick={handleApply}>
+//                             Apply
+//                         </Button>
+//                     </div>
+//                 </PopoverContent>
+//             </Popover>
+//         </div>
+//     )
+// }
+
+
+ function DateRangePickerControlled() {
+   const [open, setOpen] = useState<boolean>(false);
+   const [value, setValue] = useState<DateRange>({ start: today(), end: today() });
+ 
+   return (
+     <div className="relative">
+       <button onClick={() => setOpen(true)}>Pick dates</button>
+       <CalendarPopover
+          open={open}
+         onClose={() => setOpen(false)}
+          value={value}
+         onApply={(applied) => {
+            // applied.start / applied.end       -> the chosen range
+            // applied.compare                   -> compare toggle state
+            // applied.previousPeriod            -> { start, end } | null
+           setValue({ start: applied.start, end: applied.end });
+        //    fetchMetrics(applied.start, applied.end, applied.previousPeriod);
+         }}
+       />
+     </div>
+   );
+ }
+
+ export default DateRangePickerControlled;

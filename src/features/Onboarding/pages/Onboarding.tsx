@@ -1,5 +1,6 @@
 import { useRef } from "react";
-import { Check } from "lucide-react";
+import { Outlet, useOutletContext } from "react-router-dom";
+import { Check, Loader2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -10,73 +11,33 @@ import { AdChannelsStep } from "../components/AdChannelsStep";
 import { UtmParamsStep } from "../components/UtmParamsStep";
 import { CompleteStep } from "../components/CompleteStep";
 import { BillingStep } from "../components/BillingStep";
+import { EnableTracking } from "../components/EnableTracking";
+import type { UseOnboardingReturn } from "../types/onboarding.types";
 
 const STEPS = [
     { id: 1, label: "Welcome" },
     { id: 2, label: "Shopify" },
     { id: 3, label: "Billing" },
-    { id: 4, label: "Ad Channels" },
-    { id: 5, label: "UTM Params" },
-    { id: 6, label: "Complete" },
+    { id: 4, label: "Enable Tracking" },
+    { id: 5, label: "Ad Channels" },
+    { id: 6, label: "UTM Params" },
+    { id: 7, label: "Complete" },
 ];
 
 const CheckIcon = () => <Check size={18} />;
 
 export function OnboardingPage() {
     const onboarding = useOnboarding();
-    const { step, animating, canNext, goTo } = onboarding;
+    const { step, animating, canNext, handleNext, handlePrev, isLoadingStatus } = onboarding;
     const contentRef = useRef<HTMLDivElement>(null);
 
-    const renderStep = () => {
-        switch (step) {
-            case 1:
-                return <WelcomeStep />;
-            case 2:
-                return (
-                    <ShopifyStep
-                        shopifyConnected={onboarding.shopifyConnected}
-                        isLoading={onboarding.isLoading}
-                        shopDomain={onboarding.shopDomain}
-                        setShopDomain={onboarding.setShopDomain}
-                        error={onboarding.error}
-                        handleConnectShopify={onboarding.handleConnectShopify}
-                    />
-                );
-            case 3:
-                return (
-                    <BillingStep
-                        billingPlan={onboarding.billingPlan}
-                        setBillingPlan={onboarding.setBillingPlan}
-                    />
-                );
-            case 4:
-                return (
-                    <AdChannelsStep
-                        googleConnected={onboarding.googleConnected}
-                        metaConnected={onboarding.metaConnected}
-                        connectingGoogle={onboarding.connectingGoogle}
-                        connectingMeta={onboarding.connectingMeta}
-                        simulateConnect={onboarding.simulateConnect}
-                        setGoogleConnected={onboarding.setGoogleConnected}
-                        setConnectingGoogle={onboarding.setConnectingGoogle}
-                        setMetaConnected={onboarding.setMetaConnected}
-                        setConnectingMeta={onboarding.setConnectingMeta}
-                    />
-                );
-            case 5:
-                return (
-                    <UtmParamsStep
-                        connectedChannels={onboarding.connectedChannels}
-                        utmApplied={onboarding.utmApplied}
-                        setUtmApplied={onboarding.setUtmApplied}
-                    />
-                );
-            case 6:
-                return <CompleteStep />;
-            default:
-                return null;
-        }
-    };
+    if (isLoadingStatus) {
+        return (
+            <div className="min-h-svh bg-background flex items-center justify-center">
+                <Loader2 className="animate-spin w-8 h-8 text-primary" />
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-svh bg-background flex flex-col items-center px-4 pb-12 font-sans text-foreground">
@@ -134,18 +95,18 @@ export function OnboardingPage() {
                 }`}
                 key={step}
             >
-                {renderStep()}
+                <Outlet context={onboarding} />
             </Card>
 
             {/* Navigation */}
-            {step < 6 && (
+            {step < 7 && (
                 <footer className="w-full max-w-[620px] flex justify-between items-center mt-6">
                     {step > 1 ? (
                         <Button
                             variant="outline"
                             size="lg"
                             className="px-6 font-medium transition-colors border-[1.5px]"
-                            onClick={() => goTo("prev")}
+                            onClick={handlePrev}
                         >
                             ← Back
                         </Button>
@@ -158,12 +119,94 @@ export function OnboardingPage() {
                             canNext() ? "hover:opacity-90" : "opacity-35"
                         }`}
                         disabled={!canNext()}
-                        onClick={() => goTo("next")}
+                        onClick={handleNext}
                     >
-                        {step === 5 ? "Finish Setup" : "Continue"} →
+                        {step === 6 ? "Finish Setup" : "Continue"} →
                     </Button>
                 </footer>
             )}
         </div>
     );
+}
+
+// --- Route Wrappers ---
+
+export function WelcomeRoute() {
+    return <WelcomeStep />;
+}
+
+export function ShopifyRoute() {
+    const onboarding = useOutletContext<UseOnboardingReturn>();
+
+    return (
+        <ShopifyStep
+            shopifyConnected={onboarding.status?.steps?.shopify?.status === "completed"}
+            isLoading={onboarding.isLoading}
+            shopDomain={onboarding.shopDomain}
+            setShopDomain={onboarding.setShopDomain}
+            error={onboarding.error}
+            handleConnectShopify={onboarding.handleConnectShopify}
+        />
+    );
+}
+
+export function BillingRoute() {
+    const onboarding = useOutletContext<UseOnboardingReturn>();
+    const isCompleted = onboarding.status?.steps?.billing?.status === "completed";
+    return (
+        <BillingStep
+            billingPlan={onboarding.billingPlan}
+            setBillingPlan={onboarding.setBillingPlan}
+            isCompleted={isCompleted}
+        />
+    );
+}
+
+export function EnableExtensionRoute() {
+    const onboarding = useOutletContext<UseOnboardingReturn>();
+    return (
+        <EnableTracking
+            isThemeExtensionEnabled={onboarding.status?.steps?.storefront_tracking?.status === "completed"}
+            isLoading={onboarding.isLoading}
+            error={onboarding.error}
+            onEnableTracking={onboarding.handleEnableTracking}
+            onExtensionVerified={onboarding.handleExtensionVerified}
+            onNext={onboarding.handleNext}
+        />
+    );
+}
+
+export function AdChannelsRoute() {
+    const onboarding = useOutletContext<UseOnboardingReturn>();
+    return (
+        <AdChannelsStep
+            googleConnected={onboarding.status?.steps?.ad_channels?.google_connected ?? false}
+            metaConnected={onboarding.status?.steps?.ad_channels?.meta_connected ?? false}
+            connectingGoogle={onboarding.connectingGoogle}
+            connectingMeta={onboarding.connectingMeta}
+            simulateConnect={onboarding.simulateConnect}
+            setGoogleConnected={onboarding.setConnectingGoogle} // legacy mock bindings
+            setConnectingGoogle={onboarding.setConnectingGoogle}
+            setMetaConnected={onboarding.setConnectingMeta} // legacy mock bindings
+            setConnectingMeta={onboarding.setConnectingMeta}
+        />
+    );
+}
+
+export function UtmParamsRoute() {
+    const onboarding = useOutletContext<UseOnboardingReturn>();
+    return (
+        <UtmParamsStep
+            connectedChannels={onboarding.connectedChannels}
+            utmApplied={onboarding.utmApplied}
+            setUtmApplied={onboarding.setUtmApplied}
+            handleFinishSingleUtm={onboarding.handleFinishSingleUtm}
+        />
+    );
+}
+
+export function CompleteRoute() {
+    const onboarding = useOutletContext<UseOnboardingReturn>();
+    // CompleteRoute doesn't use standard footer but has its own button
+    return <CompleteStep handleComplete={onboarding.handleComplete} />;
 }

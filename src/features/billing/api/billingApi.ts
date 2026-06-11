@@ -6,12 +6,13 @@ export const billingApi = {
         const response = await api.get<{ plans: Plan[] }>("/api/billing/plans");
         return response.data;
     },
-    subscribe: async (planId: string): Promise<{ confirmationUrl: string }> => {
-        const response = await api.post<{ confirmationUrl: string }>("/api/billing/subscribe", { planId });
+    subscribe: async (planId: string, source: string): Promise<{ confirmationUrl: string }> => {
+        const response = await api.post<{ confirmationUrl: string }>("/api/billing/subscribe", { plan_id: planId, source });
         return response.data;
     },
     getStatus: async (shopId: string): Promise<{ subscription: Subscription | null }> => {
-        const response = await api.get<{ subscription: Subscription | null }>(`/api/billing/status?shopId=${shopId}`);
+        // const response = await api.get<{ subscription: Subscription | null }>(`/api/billing/status?shopId=${shopId}`);
+        const response = await api.get<{ subscription: Subscription | null }>(`/api/billing/status`);
         return response.data;
     },
     changePlan: async (newPlanId: string, shopId: string): Promise<{ confirmationUrl: string }> => {

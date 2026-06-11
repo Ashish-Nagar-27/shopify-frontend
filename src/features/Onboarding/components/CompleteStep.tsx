@@ -1,10 +1,11 @@
-import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { PartyIcon } from "./icons";
 
-export function CompleteStep() {
-    const navigate = useNavigate();
-    
+interface CompleteStepProps {
+    handleComplete?: () => void;
+}
+
+export function CompleteStep({ handleComplete }: CompleteStepProps) {
     return (
         <div className="flex flex-col items-center gap-4">
             <PartyIcon />
@@ -18,7 +19,7 @@ export function CompleteStep() {
             <Button
                 size="lg"
                 className="px-8 mt-2 font-bold transition-opacity hover:opacity-90 tracking-tight"
-                onClick={() => navigate("/dashboard")}
+                onClick={handleComplete}
             >
                 Go to Dashboard →
             </Button>

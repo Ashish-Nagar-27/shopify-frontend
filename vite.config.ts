@@ -11,4 +11,9 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  // server: {
+  //   host: true,
+  //   port: 5173, // or whatever you use
+  //   allowedHosts: ['kingston-viewy-carin.ngrok-free.dev'],
+  // },
 })

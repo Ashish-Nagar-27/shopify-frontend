@@ -12,7 +12,8 @@ export const integrationApi = {
         return response.data;
     },
     togglePixel: async (enabled: boolean): Promise<void> => {
-        const response = await api.post<void>("/api/shopify/pixel/toggle", { enabled });
+        // const response = await api.post<void>("/api/shopify/pixel/toggle", { enabled });
+        const response = await api.post<void>("/api/toggle-pixel", { enabled });
         return response.data;
     },
     toggleWebhook: async (enabled: boolean): Promise<void> => {
@@ -20,7 +21,7 @@ export const integrationApi = {
         return response.data;
     },
     getEmbedStatus: async (): Promise<EmbedStatusResponse> => {
-        const response = await api.get<EmbedStatusResponse>("/api/shopify/embed-status");
+        const response = await api.get<EmbedStatusResponse>("/api/embed-status");
         return response.data;
     }
 };

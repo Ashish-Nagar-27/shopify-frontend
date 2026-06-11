@@ -65,11 +65,11 @@ export function IntegrationPage() {
 
     return (
         <div className="min-h-svh bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950">
-            <DashboardHeader
+            {/* <DashboardHeader
                 userName={user?.name}
                 userEmail={user?.email}
                 onLogout={logout}
-            />
+            /> */}
 
             <main className="mx-auto max-w-5xl px-6 py-12">
                 <div className="mb-10">
@@ -83,7 +83,7 @@ export function IntegrationPage() {
                 </div>
 
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                    {user?.isConnected ? (
+                    {!user?.isConnected ? (
                         <ActiveIntegrationCard
                             isPixelEnabled={isPixelEnabled}
                             isWebhookEnabled={isWebhookEnabled}

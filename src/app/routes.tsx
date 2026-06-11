@@ -10,7 +10,16 @@ import { DashboardPage } from "@/features/dashboard/pages/DashboardPage";
 import { ReportingPage } from "@/features/reporting/pages/ReportingPage";
 import { CreativePage } from "@/features/creative/pages/CreativePage";
 import { SettingsPage } from "@/features/settings/pages/SettingsPage";
-import { OnboardingPage } from "@/features/Onboarding/pages/Onboarding";
+import { 
+    OnboardingPage,
+    WelcomeRoute,
+    ShopifyRoute,
+    BillingRoute,
+    EnableExtensionRoute,
+    AdChannelsRoute,
+    UtmParamsRoute,
+    CompleteRoute
+} from "@/features/Onboarding/pages/Onboarding";
 import { useAuthStore } from "@/store/useAuthStore";
 
 import { ForgotPasswordPage } from "@/features/auth/pages/ForgotPasswordPage";
@@ -36,7 +45,7 @@ const router = createBrowserRouter([
     {
         element: <ProtectedRoute />,
         children: [
-            { path: "/onboarding", element: <OnboardingPage /> },
+            // { path: "/onboarding", element: <OnboardingPage /> },
             {
                 element: <MainLayout />,
                 children: [
@@ -47,6 +56,20 @@ const router = createBrowserRouter([
                     { path: "/reporting", element: <ReportingPage /> },
                     { path: "/creative", element: <CreativePage /> },
                     { path: "/settings", element: <SettingsPage /> },
+                    { 
+                        path: "/onboarding", 
+                        element: <OnboardingPage />,
+                        children: [
+                            { index: true, element: <Navigate to="welcome" replace /> },
+                            { path: "welcome", element: <WelcomeRoute /> },
+                            { path: "shopify", element: <ShopifyRoute /> },
+                            { path: "billing", element: <BillingRoute /> },
+                            { path: "enable-tracking", element: <EnableExtensionRoute /> },
+                            { path: "ad-channels", element: <AdChannelsRoute /> },
+                            { path: "utm-params", element: <UtmParamsRoute /> },
+                            { path: "complete", element: <CompleteRoute /> },
+                        ]
+                    },
                 ],
             },
         ],
