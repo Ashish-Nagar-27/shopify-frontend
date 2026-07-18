@@ -28,6 +28,7 @@ type LoginValues = z.infer<typeof loginSchema>;
 export function LoginPage() {
     const navigate = useNavigate();
     const { login, isLoading } = useAuthStore();
+
     const [formError, setFormError] = useState<string | null>(null);
     const [showPassword, setShowPassword] = useState(false);
 
@@ -38,12 +39,19 @@ export function LoginPage() {
             password: "",
         },
     });
-
+//  console.log('isLoading ', isLoading)
+//               console.log("user ", user)
     async function onSubmit(data: LoginValues) {
         setFormError(null);
         try {
-            await login(data);
-            navigate("/onboarding", { replace: true });
+             await login(data);
+             const user = useAuthStore.getState().user
+             console.log("user ", user)
+            if(user?.onboarding_status === "completed"){
+                navigate("/reporting", { replace: true });
+            }else{
+                navigate("/onboarding", { replace: true });
+            }
             toast.success("Login Successfull");
         } catch (error) {
             console.error("Login failed:", error);

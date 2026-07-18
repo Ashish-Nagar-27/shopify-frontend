@@ -61,7 +61,7 @@ export function MainLayout() {
           <div className={`grid ${showSidebar ? 'grid-cols-[72px_1fr]' : 'grid-cols-1'} min-h-screen`}>
       {showSidebar && <AppSidebar />}
       <div className="flex flex-col min-w-0">
-       {showSidebar &&  <Header showDatePicker={showDatePicker} />}
+       {showSidebar &&  <Header showDatePicker={showDatePicker} dateStoreKey={showDatePicker ? "reportingDates" : "dashboardDates"} />}
         <>
             <Outlet /> 
         </>

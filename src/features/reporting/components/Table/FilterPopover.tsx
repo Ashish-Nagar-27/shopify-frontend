@@ -65,6 +65,7 @@ export function Dropdown({ value, options, onChange }: DropdownProps) {
   );
 }
 
+
 interface FilterPopoverProps {
   open: boolean;
   anchorRef: React.RefObject<HTMLButtonElement | null>;
@@ -123,7 +124,6 @@ export function FilterPopover({ open, anchorRef, onClose, value, onApply }: Filt
           { key: 'clickHandling' as const, label: 'Click Handling',      hint: 'How to treat clicks before attribution' },
           { key: 'window'        as const, label: 'Window Attribution',   hint: 'Lookback window for conversions' },
           { key: 'model'         as const, label: 'Attribution Model',    hint: 'How credit is split across touches' },
-          { key: 'event'         as const, label: 'Conversion Event',     hint: 'Which event to attribute against' },
         ].map(({ key, label, hint }) => (
           <div key={key} className="grid grid-cols-[160px_1fr] items-center gap-4">
             <div className="flex flex-col gap-[2px]">

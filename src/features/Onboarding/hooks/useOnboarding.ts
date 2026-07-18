@@ -151,7 +151,7 @@ export function useOnboarding(): UseOnboardingReturn {
         setError(null);
 
         try {
-            const data = await onboardingApi.connectShopify(shop);
+            const data = await onboardingApi.connectShopify(shop, "onboarding");
             if (data.url) {
                 window.location.href = data.url;
             } else {
@@ -182,28 +182,69 @@ export function useOnboarding(): UseOnboardingReturn {
         await transitionWithAnimation(() => onboardingApi.finishWelcome());
     }
 
+    // async function handleEnableTracking() {
+    //     setIsLoading(true);
+    //     setError(null);
+          
+    //     const CLIENT_ID = import.meta.env.VITE_SHOPIFY_CLIENT_ID; 
+    //     const EMBED_HANDLE = import.meta.env.VITE_SHOPIFY_EMBED_HANDLE;
+    //     const shopDomainVal = status?.steps?.shopify?.shop_domain 
+    //     const shopHandle = shopDomainVal ? shopDomainVal.replace(/\.myshopify\.com$/, "") : undefined;
+
+    //     if(!shopDomainVal){
+    //         alert("Please connect your Shopify store first.");
+    //         return;
+    //     }
+    //       console.log('shopDomainVal ', shopDomainVal)
+    //       console.log('embed ', EMBED_HANDLE)
+    //     try {
+    //         // const url = `https://admin.shopify.com/store/${shopHandle}/themes/current/editor?context=apps&appEmbed=${encodeURIComponent(
+    //         //     `${CLIENT_ID}%2F${EMBED_HANDLE}`
+    //         // )}`;
+    //               const url = `https://admin.shopify.com/store/${shopHandle}/themes/current/editor?context=apps&appEmbed=${encodeURIComponent(
+    //         `${CLIENT_ID}/${EMBED_HANDLE}`
+    //     )}`;
+
+    //         console.log(url);
+    //         window.open(url, "_blank");
+    //     } catch (err) {
+    //         console.error("Failed to open theme editor:", err);
+    //         setError("Failed to open theme editor. Please try again.");
+    //     } finally {
+    //         setIsLoading(false);
+    //     }
+    // }
+
     async function handleEnableTracking() {
-        setIsLoading(true);
-        setError(null);
+    setIsLoading(true);
+    setError(null);
 
-        const CLIENT_ID = import.meta.env.VITE_SHOPIFY_CLIENT_ID; // app's public client ID
-        const EMBED_HANDLE = import.meta.env.VITE_SHOPIFY_EMBED_HANDLE;
-        const shopDomainVal = status?.steps?.shopify?.shop_domain || "trackocitydev";
-        const shopHandle = shopDomainVal.replace(/\.myshopify\.com$/, "");
+    const CLIENT_ID = import.meta.env.VITE_SHOPIFY_CLIENT_ID;
+    const EMBED_HANDLE = import.meta.env.VITE_SHOPIFY_EMBED_HANDLE;
+    const shopDomainVal = status?.steps?.shopify?.shop_domain;
+    const shopHandle = shopDomainVal ? shopDomainVal.replace(/\.myshopify\.com$/, "") : undefined;
 
-        try {
-            const url =
-                `https://admin.shopify.com/store/${shopHandle}/themes/current/editor` +
-                `?context=apps&appEmbed=${CLIENT_ID}%2F${EMBED_HANDLE}`;
-
-            window.open(url, "_blank");
-        } catch (err) {
-            console.error("Failed to open theme editor:", err);
-            setError("Failed to open theme editor. Please try again.");
-        } finally {
-            setIsLoading(false);
-        }
+    if (!shopDomainVal) {
+        alert("Please connect your Shopify store first.");
+        setIsLoading(false);
+        return;
     }
+
+    try {
+        const url = `https://admin.shopify.com/store/${shopHandle}/themes/current/editor?context=apps&appEmbed=${encodeURIComponent(
+            `${CLIENT_ID}/${EMBED_HANDLE}`
+        )}`;
+
+        console.log(url);
+        // window.location.href = url
+        window.open(url, "_blank")
+    } catch (err) {
+        console.error("Failed to open theme editor:", err);
+        setError("Failed to open theme editor. Please try again.");
+    } finally {
+        setIsLoading(false);
+    }
+}
 
     async function handleExtensionVerified() {
         setIsLoading(true);

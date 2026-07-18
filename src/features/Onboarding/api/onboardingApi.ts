@@ -3,8 +3,8 @@ import { api } from "@/services/api";
 import type { OnboardingStatusResponse } from "../types/onboarding.types";
 
 export const onboardingApi = {
-    connectShopify: async (shopDomain: string) => {
-        return integrationApi.connectShopify(shopDomain);
+    connectShopify: async (shop: string, source: string) => {
+        return integrationApi.connectShopify(shop , source);
     },
     
     getStatus: async (): Promise<OnboardingStatusResponse> => {

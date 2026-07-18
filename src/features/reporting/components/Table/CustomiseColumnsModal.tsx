@@ -1,25 +1,75 @@
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { ALL_COLUMNS, COL_BY_KEY, DEFAULT_VISIBLE } from '@/lib/data';
+import type { ColumnDef } from '@/lib/types';
 import * as Icon from '@/components/icons';
+import { SortableColumnsList } from './SortableColumnsList';
+import { ColumnViewsSidebar } from './ColumnViewsSidebar';
+import { useQuery } from '@tanstack/react-query';
+import { reportingApi } from '../../api/reportingApi';
 
 interface Props {
   open: boolean;
-  initialSelected: string[];
+  initialSelected: ColumnDef[];
   onClose: () => void;
-  onApply: (keys: string[]) => void;
+  onApply: (keys: ColumnDef[], viewName?: string) => void;
+  views?: string[];
+  currentView?: string;
+  onSavePreset?: (presetName: string, selectedCols: ColumnDef[]) => void;
+  onDeletePreset?: (presetName: string) => void;
 }
 
-export function CustomiseColumnsModal({ open, initialSelected, onClose, onApply }: Props) {
-  const [selected, setSelected] = useState<string[]>(initialSelected);
+export function CustomiseColumnsModal({
+  open,
+  initialSelected,
+  onClose,
+  onApply,
+  views,
+  currentView,
+  onSavePreset,
+  onDeletePreset,
+}: Props) {
+  const [selected, setSelected] = useState<ColumnDef[]>(initialSelected);
   const [search, setSearch]     = useState('');
   const [tab, setTab]           = useState('all');
-  const [view, setView]         = useState('myview');
-  const [dragKey, setDragKey]   = useState<string | null>(null);
+  const [view, setView]         = useState(currentView || 'myview');
+  console.log('view ', view, views)
+
+  const { data: viewColumnsData, isFetching: isFetchingViewColumns } = useQuery({
+    queryKey: ["reportingCustomizedColumns", view],
+    queryFn: () => reportingApi.getCustomizedColumns(view),
+    enabled: open && !!view,
+    staleTime: Infinity,
+  });
 
   useEffect(() => {
-    if (open) { setSelected(initialSelected); setSearch(''); setTab('all'); }
-  }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (viewColumnsData?.data) {
+      let cols = [...viewColumnsData.data]
+        .sort((a, b) => a.seq - b.seq)
+        .map(item => COL_BY_KEY[item.field])
+        .filter(Boolean) as ColumnDef[];
+
+      // Filter out name and status completely
+      cols = cols.filter(c => c.key !== 'name' && c.key !== 'status');
+
+      setSelected(cols);
+    }
+  }, [viewColumnsData]);
+
+  useEffect(() => {
+    if (currentView) {
+      setView(currentView);
+    }
+  }, [currentView]);
+
+  useEffect(() => {
+    if (open) {
+      setSelected(initialSelected.filter(c => c.key !== 'name' && c.key !== 'status'));
+      setSearch('');
+      setTab('all');
+      if (currentView) setView(currentView);
+    }
+  }, [open, initialSelected, currentView]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!open) return null;
 
@@ -32,36 +82,21 @@ export function CustomiseColumnsModal({ open, initialSelected, onClose, onApply 
 
   const toggle = (key: string) => {
     const col = COL_BY_KEY[key];
-    if (col?.required) return;
-    setSelected(s => s.includes(key) ? s.filter(k => k !== key) : [...s, key]);
+    if (!col || col.required) return;
+    setSelected(s => s.some(c => c.key === key) ? s.filter(c => c.key !== key) : [...s, col]);
   };
 
   const remove = (key: string) => {
     const col = COL_BY_KEY[key];
     if (col?.required) return;
-    setSelected(s => s.filter(k => k !== key));
-  };
-
-  const onDragStart = (k: string) => setDragKey(k);
-  const onDragOver  = (e: React.DragEvent) => e.preventDefault();
-  const onDrop      = (target: string) => {
-    if (!dragKey || dragKey === target) return;
-    setSelected(s => {
-      const next = [...s];
-      const from = next.indexOf(dragKey), to = next.indexOf(target);
-      if (from < 0 || to < 0) return s;
-      next.splice(from, 1);
-      next.splice(to, 0, dragKey);
-      return next;
-    });
-    setDragKey(null);
+    setSelected(s => s.filter(c => c.key !== key));
   };
 
   const tabCls = (k: string) => cn(
     'px-3 py-[6px] bg-surface border border-border-soft rounded-[7px] text-[12px] text-fg-dim font-medium inline-flex items-center gap-1 transition-all duration-[120ms] hover:border-border',
     tab === k && 'bg-cyan-soft border-cyan-deep text-cyan',
   );
-
+  console.log('view-currentView-views=', view, '-', currentView , '-', views)
   return (
     <div
       className="fixed inset-0 z-[100] bg-[oklch(0_0_0/0.5)] [backdrop-filter:blur(6px)] grid place-items-center p-6 [animation:modal-veil-in_0.18s_ease]"
@@ -86,33 +121,14 @@ export function CustomiseColumnsModal({ open, initialSelected, onClose, onApply 
         <div className="grid grid-cols-[200px_1fr_300px] flex-1 min-h-0">
 
           {/* Left: Views */}
-          <div className="px-4 py-[18px] border-r border-border-soft flex flex-col gap-[10px] bg-[oklch(0.115_0.018_240)]">
-            <div className="text-[13px] font-semibold text-fg mb-3">
-              Views <span className="text-fg-mute">(1)</span>
-            </div>
-            <div className="text-[11px] px-[10px] py-2 bg-surface border border-border-soft rounded-[7px] text-fg-mute">
-              Current View: {view}
-            </div>
-            <button
-              className={cn(
-                'flex items-center justify-between px-3 py-[10px] border border-border-soft rounded-[8px] text-fg-dim text-[13px] text-left transition-all duration-[120ms] hover:text-fg hover:border-border',
-                view === 'myview' && 'bg-cyan-soft border-cyan-deep text-cyan',
-              )}
-              onClick={() => setView('myview')}>
-              <span>myview</span>
-              <span title="Delete view">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13"/>
-                </svg>
-              </span>
-            </button>
-            <button className="mt-auto flex items-center gap-2 px-3 py-[10px] bg-surface border border-border-soft rounded-[8px] text-fg-dim text-[13px] font-medium justify-center">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M19 21 12 17l-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
-              </svg>
-              Save as a column preset
-            </button>
-          </div>
+          <ColumnViewsSidebar
+            views={views}
+            activeView={view}
+            onViewChange={setView}
+            onSavePreset={(presetName) => onSavePreset?.(presetName, selected)}
+            onDeleteView={onDeletePreset}
+            currentView={currentView}
+          />
 
           {/* Middle: searchable list */}
           <div className="px-5 py-4 flex flex-col gap-[10px] min-h-0">
@@ -131,7 +147,7 @@ export function CustomiseColumnsModal({ open, initialSelected, onClose, onApply 
             </div>
             <div className="flex-1 overflow-y-auto border border-border-soft rounded-[9px] bg-bg-overlay p-1 min-h-0">
               {tabFiltered.map(col => {
-                const checked = selected.includes(col.key);
+                const checked = selected.some(c => c.key === col.key);
                 return (
                   <button
                     key={col.key}
@@ -161,57 +177,20 @@ export function CustomiseColumnsModal({ open, initialSelected, onClose, onApply 
           </div>
 
           {/* Right: selected (sortable) */}
-          <div className="px-5 py-4 pr-0 flex flex-col gap-[10px] min-h-0">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-[13px] font-semibold text-fg">
-                <b>{selected.length}</b> columns selected
-              </span>
+          {isFetchingViewColumns ? (
+            <div className="flex-1 flex flex-col items-center justify-center border border-border-soft rounded-[9px] bg-bg-overlay p-4 min-h-0">
+              <div className="flex flex-col items-center gap-3">
+                <div className="w-8 h-8 rounded-full border-[3px] border-cyan/20 border-t-cyan animate-spin" />
+                <span className="text-[12px] text-fg-mute font-medium">Loading columns...</span>
+              </div>
             </div>
-            <div className="flex-1 overflow-y-auto border border-border-soft rounded-[9px] bg-bg-overlay p-[6px] flex flex-col gap-1 min-h-0">
-              {selected.map(k => {
-                const col = COL_BY_KEY[k];
-                if (!col) return null;
-                return (
-                  <div
-                    key={k}
-                    className={cn(
-                      'grid grid-cols-[18px_1fr_auto] gap-[10px] items-center px-[10px] py-[9px] bg-surface border border-border-soft rounded-[7px] text-[13px] text-fg cursor-grab transition-all duration-[120ms]',
-                      col.required && 'bg-bg-overlay cursor-default',
-                    )}
-                    draggable={!col.required}
-                    onDragStart={() => onDragStart(k)}
-                    onDragOver={onDragOver}
-                    onDrop={() => onDrop(k)}
-                    onDragEnd={() => setDragKey(null)}>
-                    <span title="Drag to reorder" style={{ color: 'var(--fg-faint)', cursor: 'grab' }}>
-                      <svg width="10" height="14" viewBox="0 0 10 14" fill="currentColor">
-                        <circle cx="2" cy="2" r="1"/><circle cx="8" cy="2" r="1"/>
-                        <circle cx="2" cy="7" r="1"/><circle cx="8" cy="7" r="1"/>
-                        <circle cx="2" cy="12" r="1"/><circle cx="8" cy="12" r="1"/>
-                      </svg>
-                    </span>
-                    <span>{col.label}</span>
-                    {col.required ? (
-                      <span title="Required" style={{ color: 'var(--fg-faint)' }}>
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                          <rect x="4" y="11" width="16" height="10" rx="2"/>
-                          <path d="M8 11V7a4 4 0 0 1 8 0v4"/>
-                        </svg>
-                      </span>
-                    ) : (
-                      <button
-                        className="w-[22px] h-[22px] grid place-items-center rounded-[5px] text-fg-mute hover:bg-neg-soft hover:text-neg transition-[background,color] duration-[120ms]"
-                        onClick={(e) => { e.stopPropagation(); remove(k); }}>
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                          <path d="m6 6 12 12M6 18 18 6"/>
-                        </svg>
-                      </button>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+          ) : (
+            <SortableColumnsList
+              selected={selected}
+              onReorder={setSelected}
+              onRemove={remove}
+            />
+          )}
         </div>
 
         {/* Footer */}
@@ -227,7 +206,7 @@ export function CustomiseColumnsModal({ open, initialSelected, onClose, onApply 
             </button>
             <button
               className="h-9 px-[18px] bg-[linear-gradient(135deg,var(--cyan),var(--cyan-deep))] text-[oklch(0.10_0.018_240)] rounded-[8px] text-[13px] font-semibold hover:brightness-[1.08] transition-[filter] duration-[120ms]"
-              onClick={() => { onApply(selected); onClose(); }}>
+              onClick={() => { onApply(selected, view); onClose(); }}>
               Apply
             </button>
           </div>

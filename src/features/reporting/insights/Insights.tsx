@@ -1,11 +1,11 @@
-import { KpiStrip } from './KpiStrip';
-import { ActionCenter } from './ActionCenter';
+import  KpiStrips  from './KpiStrip';
+// import { ActionCenter } from './ActionCenter';
 
 export function Insights() {
   return (
     <>
-      <KpiStrip />
-      <ActionCenter />
+      <KpiStrips />
+      {/* <ActionCenter /> */}
     </>
   );
 }

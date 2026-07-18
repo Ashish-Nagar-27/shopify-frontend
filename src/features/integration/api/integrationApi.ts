@@ -6,8 +6,9 @@ export type EmbedStatusResponse = {
 };
 
 export const integrationApi = {
-    connectShopify: async (shop: string): Promise<{ url: string }> => {
-        const response = await api.post<{ url: string }>("/api/shopify/connect", { shop });
+    connectShopify: async (shop: string, source?:string): Promise<{ url: string }> => {
+        if(!source) source = 'integration'
+        const response = await api.post<{ url: string }>("/api/shopify/connect", { shop,source });
         // const response = await api.post<{ url: string }>("/shopifyintegration", { shop });
         return response.data;
     },

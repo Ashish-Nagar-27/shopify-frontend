@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import type { ButtonHTMLAttributes } from 'react';
 import { DayPicker, type DateRange as RdpRange } from 'react-day-picker';
+import { format } from 'date-fns';
 import { cn, fmtDate } from '@/lib/utils';
 import * as Icon from '@/components/icons';
 import { Button } from '@/components/ui/button';
@@ -22,6 +23,7 @@ export interface AppliedRange {
   end: Date;
   compare: boolean;
   previousPeriod: { start: Date; end: Date } | null;
+  formattedRange: [string, string];
 }
 
 /* ------------------------------------------------------------------ *
@@ -199,7 +201,12 @@ export function CalendarPopover({ open, onClose, value, onApply }: CalendarPopov
       previousPeriod = { start: atMidnight(prevStart), end: atMidnight(prevEnd) };
     }
 
-    onApply({ start, end, compare, previousPeriod });
+    const formattedRange: [string, string] = [
+      format(start, 'MMM dd yyyy'),
+      format(end, 'MMM dd yyyy')
+    ];
+
+    onApply({ start, end, compare, previousPeriod, formattedRange });
     onClose();
   };
 

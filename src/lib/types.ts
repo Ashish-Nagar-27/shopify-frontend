@@ -17,7 +17,7 @@ export interface ChartDataPoint {
 
 export interface KpiTile {
   label: string;
-  val: string;
+  value: string;
   unit: string;
   delta: string;
   pos: boolean;
@@ -64,6 +64,8 @@ export interface CampaignRow {
   children?: CampaignRow[];
   parentId?: string;
   campaignId?: string;
+  account?: string;
+  account_name?: string;
 }
 
 export interface ColumnDef {
@@ -77,6 +79,7 @@ export interface ColumnDef {
   sortable?: boolean;
   info?: boolean;
   group: string;
+  infoText?: string
 }
 
 export interface FilterState {
@@ -85,3 +88,13 @@ export interface FilterState {
   model: string;
   event: string;
 }
+
+export type TabKey = 'campaign' | 'adset' | 'ad';
+
+export interface DrillState {
+  fromTab: TabKey;
+  targetTab: TabKey;
+  ids: string[];
+  labels: string[];
+}
+
