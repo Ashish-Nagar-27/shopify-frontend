@@ -1,7 +1,7 @@
 
 import { MiniSpark } from './MiniSpark';
 import * as Icon from '@/components/icons';
-import { useReportingTableData } from '../hooks/useReportingTableData';
+import { useReportingTableData } from '../../hooks/useReportingTableData';
 import { fmt } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 
