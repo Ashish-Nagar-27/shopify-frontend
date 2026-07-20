@@ -4,8 +4,12 @@ import type { CampaignRow } from '@/lib/types';
 import { ReportSalesDrawerHeader } from './ReportSalesDrawerHeader';
 import { ReportSalesListPanel } from './ReportSalesListPanel';
 import { ReportCustomerProfilePanel } from './ReportCustomerProfilePanel';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
+import {
+  Drawer,
+  DrawerContent,
+  DrawerTitle,
+  DrawerDescription,
+} from '@/components/ui/drawer';
 
 interface ReportSalesModalProps {
   open: boolean;
@@ -19,10 +23,6 @@ export function ReportSalesModal({ open, onClose, row, tab }: ReportSalesModalPr
   const [selectedTrackId, setSelectedTrackId] = useState<string | null>(null);
   const [selectedCustomerName, setSelectedCustomerName] = useState<string | null>(null);
   const [profileActiveTab, setProfileActiveTab] = useState<'profile' | 'journey'>('profile');
-  console.log('profileActiveTab ', profileActiveTab)
-  console.log('selectedCustomerName ', selectedCustomerName)
-  console.log('selectedTrackId ', selectedTrackId)
-  console.log('view ', view)
 
   // Map source ('fb' | 'go' | 'tt') to channel string
   const getChannelName = (source: string | null | undefined): string => {
@@ -53,8 +53,6 @@ export function ReportSalesModal({ open, onClose, row, tab }: ReportSalesModalPr
     }
   }, [open]);
 
-  if (!open) return null;
-
   // Level 2 Transition: Customer Name Click (Open Profile tab)
   const handleCustomerClick = (trackId: string, name: string) => {
     setSelectedTrackId(trackId);
@@ -76,33 +74,11 @@ export function ReportSalesModal({ open, onClose, row, tab }: ReportSalesModalPr
   };
 
   return (
-    <div
-      className="fixed inset-0 z-[100] bg-[oklch(0_0_0/0.5)] [backdrop-filter:blur(2px)] grid place-items-center p-6 [animation:modal-veil-in_0.18s_ease]"
-      onClick={onClose}
-    >
+    <Drawer open={open} onOpenChange={(isOpen) => { if (!isOpen) onClose(); }} direction="right">
+      <DrawerContent className="!select-text data-[vaul-drawer-direction=right]:w-[95vw] data-[vaul-drawer-direction=right]:max-w-[1000px] data-[vaul-drawer-direction=right]:sm:max-w-[1000px] h-full rounded-l-[16px] rounded-r-none bg-bg-deep border-l border-border shadow-[-20px_0_60px_oklch(0_0_0/0.5)] p-0 gap-0 outline-none">
+        <DrawerTitle className="sr-only">Sales Details</DrawerTitle>
+        <DrawerDescription className="sr-only">Detailed sales list and customer profile view</DrawerDescription>
 
-    <div
-        className="
-    fixed
-    top-0
-    right-0
-    h-full
-    w-[95vw]
-    max-w-[1000px]
-    bg-bg-deep
-    border-l
-    border-y
-    border-border
-    rounded-l-[16px]
-    shadow-[-20px_0_60px_oklch(0_0_0/0.5)]
-    overflow-hidden
-    flex
-    flex-col
-    [animation:slide-in-right_0.2s_ease-out]
-  "
-        onClick={(e) => e.stopPropagation()}
-      > 
-  
         {/* Consolidated Header with Breadcrumbs */}
         <ReportSalesDrawerHeader
           tab={tab}
@@ -120,9 +96,7 @@ export function ReportSalesModal({ open, onClose, row, tab }: ReportSalesModalPr
             style={{
               transform: `translateX(${view === 'sales' ? '0%' : '-50%'})`,
             }}
-          >    
-
-
+          >
             {/* Panel 1: Sales Details List (Level 1) */}
             <div className="w-1/2 h-full overflow-y-auto p-6 bg-bg-deep">
               <ReportSalesListPanel
@@ -137,7 +111,6 @@ export function ReportSalesModal({ open, onClose, row, tab }: ReportSalesModalPr
 
             {/* Panel 2: Customer Profile (Level 2) */}
             <div className="w-1/2 h-full overflow-y-auto p-6 bg-bg-deep border-l border-border-soft">
-          
               {selectedTrackId ? (
                 <ReportCustomerProfilePanel
                   trackid={selectedTrackId}
@@ -153,7 +126,7 @@ export function ReportSalesModal({ open, onClose, row, tab }: ReportSalesModalPr
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </DrawerContent>
+    </Drawer>
   );
 }

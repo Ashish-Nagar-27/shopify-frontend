@@ -1,4 +1,15 @@
-import { fmtMoney } from '@/lib/utils';
+import { useState, useMemo } from 'react';
+import {
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  useReactTable,
+  type ColumnDef,
+  type SortingState,
+} from '@tanstack/react-table';
+import { ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { fmtMoney, cn } from '@/lib/utils';
 
 interface ReportSalesListPanelProps {
   isLoading: boolean;
@@ -17,7 +28,8 @@ export function ReportSalesListPanel({
   onCustomerClick,
   onTrackIdClick,
 }: ReportSalesListPanelProps) {
-  
+  const [sorting, setSorting] = useState<SortingState>([]);
+
   const formatOrderDate = (dateStr: string): string => {
     if (!dateStr) return '—';
     try {
@@ -31,16 +43,114 @@ export function ReportSalesListPanel({
         hour: 'numeric',
         minute: '2-digit',
         second: '2-digit',
-        hour12: true
+        hour12: true,
       });
     } catch (e) {
       return dateStr;
     }
   };
 
+  const columns = useMemo<ColumnDef<any>[]>(
+    () => [
+      {
+        id: 'complete_name',
+        accessorKey: 'complete_name',
+        header: 'Name',
+        cell: ({ row }) => {
+          const sale = row.original;
+          const customerName = sale?.complete_name || 'Customer';
+          const trackId = sale?.trackid || '';
+
+          return sale?.complete_name ? (
+            <button
+              onClick={() => onCustomerClick(trackId, customerName)}
+              className="text-cyan text-left underline decoration-dotted underline-offset-[3px] hover:text-cyan-hover font-medium cursor-pointer focus:outline-none max-w-[160px] truncate block"
+              title={`Open ${customerName}'s Profile`}
+            >
+              {customerName}
+            </button>
+          ) : (
+            '—'
+          );
+        },
+      },
+      {
+        id: 'email_phone',
+        accessorKey: 'email_phone',
+        header: 'Email/Phone',
+        cell: ({ row }) => (
+          <span className="text-fg-dim font-mono text-[12px]">
+            {row.original?.email_phone || '—'}
+          </span>
+        ),
+      },
+      {
+        id: 'total',
+        accessorKey: 'total',
+        header: 'Amount',
+        accessorFn: (row) => Number(row.total || 0),
+        cell: ({ row }) => (
+          <span className="text-fg font-mono font-medium tabular-nums">
+            {fmtMoney(row.original?.total)}
+          </span>
+        ),
+      },
+      {
+        id: 'order_date',
+        accessorKey: 'order_date',
+        header: 'Received At',
+        cell: ({ row }) => (
+          <span className="text-fg-dim font-mono text-[12px]">
+            {formatOrderDate(row.original?.order_date)}
+          </span>
+        ),
+      },
+      {
+        id: 'trackid',
+        accessorKey: 'trackid',
+        header: 'User Journey',
+        cell: ({ row }) => {
+          const sale = row.original;
+          const customerName = sale?.complete_name || 'Customer';
+          const trackId = sale?.trackid || '';
+
+          return (
+            <div className="flex items-center gap-2">
+              {trackId ? (
+                <button
+                  onClick={() => onTrackIdClick(trackId, customerName)}
+                  className="text-cyan underline decoration-dotted underline-offset-[3px] hover:text-cyan-hover cursor-pointer font-mono font-medium text-[12px] focus:outline-none"
+                  title={`Open ${customerName}'s Journey`}
+                >
+                  {trackId}
+                </button>
+              ) : (
+                '—'
+              )}
+            </div>
+          );
+        },
+      },
+    ],
+    [onCustomerClick, onTrackIdClick]
+  );
+
+  const data = useMemo(() => salesData || [], [salesData]);
+
+  const table = useReactTable({
+    data,
+    columns,
+    state: {
+      sorting,
+    },
+    onSortingChange: setSorting,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+  });
+
   if (isLoading) {
     return (
-      <div className="space-y-4 ">
+      <div className="space-y-4">
         {/* Table skeleton header */}
         <div className="grid grid-cols-[1.5fr_1.5fr_1fr_1.2fr_1.2fr] gap-4 pb-2 border-b border-border-soft">
           {[...Array(5)].map((_, i) => (
@@ -98,71 +208,63 @@ export function ReportSalesListPanel({
 
   return (
     <div className="border border-border-soft rounded-[8px] bg-bg-overlay overflow-hidden">
-      <table className="w-full border-collapse text-left text-[13px]">
-        <thead>
-          <tr className="bg-surface border-b border-border-soft text-fg-dim font-medium">
-            <th className="px-5 py-3 font-sans w-[160px]">Name</th>
-            <th className="px-5 py-3 font-sans">Email/Phone</th>
-            <th className="px-5 py-3 font-sans text-right">Amount</th>
-            <th className="px-5 py-3 font-sans">Received At</th>
-            <th className="px-5 py-3 font-sans">User Journey</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-border-soft/50">
-          {salesData?.map((sale: any, idx: number) => {
-            const customerName = sale?.complete_name || 'Customer';
-            const trackId = sale?.trackid || '';
-            
-            return (
-              <tr
-                key={idx}
-                className="hover:bg-surface-2/40 transition-[background] duration-150"
-              >
-                {/* Clickable Customer Name */}
-                <td className="px-5 py-3 text-fg font-medium max-w-[160px] truncate" title={`Open ${customerName}'s Profile`}>
-                  {sale?.complete_name ? (
-                    <button
-                      onClick={() => onCustomerClick(trackId, customerName)}
-                      className="text-cyan text-left underline decoration-dotted underline-offset-[3px] hover:text-cyan-hover font-medium cursor-pointer focus:outline-none"
-                    >
-                      {customerName}
-                    </button>
-                  ) : (
-                    '—'
-                  )}
-                </td>
-                
-                <td className="px-5 py-3 text-fg-dim font-mono text-[12px]">{sale?.email_phone || '—'}</td>
-                
-                <td className="px-5 py-3 text-right text-fg font-mono font-medium tabular-nums">
-                  {fmtMoney(sale?.total)}
-                </td>
-                
-                <td className="px-5 py-3 text-fg-dim font-mono text-[12px]">
-                  {formatOrderDate(sale?.order_date)}
-                </td>
-                
-                {/* Clickable Journey Track ID */}
-                <td className="px-5 py-3">
-                  <div className="flex items-center gap-2">
-                    {sale?.trackid ? (
-                      <button
-                        onClick={() => onTrackIdClick(trackId, customerName)}
-                        className="text-cyan underline decoration-dotted underline-offset-[3px] hover:text-cyan-hover cursor-pointer font-mono font-medium text-[12px] focus:outline-none"
-                        title={`Open ${customerName}'s Journey`}
-                      >
-                        {trackId}
-                      </button>
-                    ) : (
-                      '—'
+      <Table className="w-full border-collapse text-left text-[13px]">
+        <TableHeader>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id} className="bg-surface border-b border-border-soft hover:bg-surface text-fg-dim font-medium">
+              {headerGroup.headers.map((header) => {
+                const isSorted = header.column.getIsSorted();
+                return (
+                  <TableHead
+                    key={header.id}
+                    onClick={header.column.getToggleSortingHandler()}
+                    className={cn(
+                      "px-5 py-3 font-sans font-medium text-fg-dim text-[13px] select-none cursor-pointer hover:text-fg transition-colors h-auto border-b border-border-soft",
+                      header.column.id === 'total' && "text-right",
+                      header.column.id === 'complete_name' && "w-[160px]"
                     )}
-                  </div>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+                  >
+                    <div className={cn("inline-flex items-center gap-1.5", header.column.id === 'total' && "justify-end w-full")}>
+                      <span>{flexRender(header.column.columnDef.header, header.getContext())}</span>
+                      {isSorted === 'asc' ? (
+                        <ArrowUp className="w-3.5 h-3.5 text-cyan" />
+                      ) : isSorted === 'desc' ? (
+                        <ArrowDown className="w-3.5 h-3.5 text-cyan" />
+                      ) : (
+                        <ArrowUpDown className="w-3.5 h-3.5 text-fg-dim/40 hover:text-fg-dim transition-colors" />
+                      )}
+                    </div>
+                  </TableHead>
+                );
+              })}
+            </TableRow>
+          ))}
+        </TableHeader>
+        <TableBody className="divide-y divide-border-soft/50">
+          {table.getRowModel().rows.map((row) => (
+            <TableRow
+              key={row.id}
+              className="hover:bg-surface-2/40 transition-[background] duration-150 border-b border-border-soft/50"
+            >
+              {row.getVisibleCells().map((cell) => (
+                <TableCell
+                  key={cell.id}
+                  className={cn(
+                    "px-5 py-3",
+                    cell.column.id === 'total' && "text-right"
+                  )}
+                >
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </div>
   );
 }
+
+
+
+
