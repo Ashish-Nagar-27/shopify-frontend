@@ -3,7 +3,7 @@ import { useReportingTableSaleData } from '../../hooks/useReportingTableData';
 import type { CampaignRow } from '@/lib/types';
 import { ReportSalesDrawerHeader } from './ReportSalesDrawerHeader';
 import { ReportSalesListPanel } from './ReportSalesListPanel';
-import { ReportCustomerProfilePanel } from './ReportCustomerProfilePanel';
+import { ReportCustomerProfilePanel, type CustomerProfileTab } from './ReportCustomerProfilePanel';
 import {
   Drawer,
   DrawerContent,
@@ -22,7 +22,7 @@ export function ReportSalesModal({ open, onClose, row, tab }: ReportSalesModalPr
   const [view, setView] = useState<'sales' | 'profile'>('sales');
   const [selectedTrackId, setSelectedTrackId] = useState<string | null>(null);
   const [selectedCustomerName, setSelectedCustomerName] = useState<string | null>(null);
-  const [profileActiveTab, setProfileActiveTab] = useState<'profile' | 'journey'>('profile');
+  const [profileActiveTab, setProfileActiveTab] = useState<CustomerProfileTab>('profile');
 
   // Map source ('fb' | 'go' | 'tt') to channel string
   const getChannelName = (source: string | null | undefined): string => {
@@ -117,6 +117,7 @@ export function ReportSalesModal({ open, onClose, row, tab }: ReportSalesModalPr
                   activeTab={profileActiveTab}
                   setActiveTab={setProfileActiveTab}
                   selectedCustomerName={selectedCustomerName}
+                  onTrackIdClick={handleTrackIdClick}
                 />
               ) : (
                 <div className="flex items-center justify-center h-full text-fg-mute">

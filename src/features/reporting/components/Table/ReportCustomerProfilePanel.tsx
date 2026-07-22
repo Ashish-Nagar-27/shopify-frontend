@@ -1,21 +1,24 @@
 import { useReportingCustomerProfile, useReportingTableSaleJourney } from '../../hooks/useReportingTableData';
 import { cn, fmtMoney } from '@/lib/utils';
 import * as Icon from '@/components/icons';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
+import { motion } from "motion/react";
+
+export type CustomerProfileTab = 'profile' | 'journey';
 
 interface ReportCustomerProfilePanelProps {
   trackid: string;
-  activeTab: 'profile' | 'journey';
-  setActiveTab: (tab: 'profile' | 'journey') => void;
+  activeTab: CustomerProfileTab;
+  setActiveTab: (tab: CustomerProfileTab) => void;
   selectedCustomerName: string | null;
+  onTrackIdClick?: (trackId: string, name: string) => void;
 }
 
 export function ReportCustomerProfilePanel({
   trackid,
   activeTab,
   setActiveTab,
-  selectedCustomerName
+  selectedCustomerName,
+  onTrackIdClick,
 }: ReportCustomerProfilePanelProps) {
   
   // Queries
@@ -39,6 +42,7 @@ export function ReportCustomerProfilePanel({
   const orders = profileData?.data?.orders || profileData?.orders || [];
   const journey = profileData?.data?.journey || profileData?.journey;
 
+  
   // Generate initials for avatar
   const getInitials = (nameStr: string) => {
     if (!nameStr) return 'C';
@@ -148,31 +152,38 @@ export function ReportCustomerProfilePanel({
       </div>
 
       {/* Tabs */}
+
+
       <div className="flex border-b border-border-soft gap-6 select-none">
-        <button
-          onClick={() => setActiveTab('profile')}
-          className={cn(
-            'pb-3 text-[14px] font-medium transition-all relative focus:outline-none',
-            activeTab === 'profile' ? 'text-cyan font-semibold' : 'text-fg-mute hover:text-fg'
-          )}
-        >
-          Overview & Orders
-          {activeTab === 'profile' && (
-            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-cyan rounded-full" />
-          )}
-        </button>
-        <button
-          onClick={() => setActiveTab('journey')}
-          className={cn(
-            'pb-3 text-[14px] font-medium transition-all relative focus:outline-none',
-            activeTab === 'journey' ? 'text-cyan font-semibold' : 'text-fg-mute hover:text-fg'
-          )}
-        >
-          User Journey Timeline
-          {activeTab === 'journey' && (
-            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-cyan rounded-full" />
-          )}
-        </button>
+        {([
+          { id: "profile", label: "Overview & Orders" },
+          { id: "journey", label: `User Journey Timeline ${trackid ? "(#" + trackid + ")": ""}` },
+        ] as const).map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={cn(
+              "relative pb-3 text-[14px] font-medium transition-colors",
+              activeTab === tab.id
+                ? "text-cyan font-semibold"
+                : "text-fg-mute hover:text-fg"
+            )}
+          >
+            {tab.label}
+
+            {activeTab === tab.id && (
+              <motion.div
+                layoutId="tab-indicator"
+                className="absolute bottom-0 left-0 right-0 h-[2px] rounded-full bg-cyan"
+                transition={{
+                  type: "spring",
+                  stiffness: 450,
+                  damping: 35,
+                }}
+              />
+            )}
+          </button>
+        ))}
       </div>
 
       {/* Tab Panels */}
@@ -294,17 +305,39 @@ export function ReportCustomerProfilePanel({
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-border-soft/40">
-                        {orders.map((order: any, idx: number) => (
-                          <tr key={idx} className="hover:bg-surface-2/20">
-                            <td className="px-4 py-2.5 text-fg font-mono text-[11px]">{order?.orderId || '—'}</td>
-                            <td className="px-4 py-2.5 text-fg-dim font-mono">{order?.date || '—'}</td>
-                            <td className="px-4 py-2.5 text-right text-fg font-mono tabular-nums">
-                              ₹{fmtMoney(order?.amount)}
-                            </td>
-                            <td className="px-4 py-2.5 text-fg-dim">{order?.channel || '—'}</td>
-                            <td className="px-4 py-2.5">{getStatusBadge(order?.status)}</td>
-                          </tr>
-                        ))}
+                        {orders.map((order: any, idx: number) => {
+                          const orderId = order?.orderId;
+                          const isCurrentTrackId = Boolean(orderId) && String(orderId) === String(trackid);
+
+                          return (
+                            <tr key={idx} className="hover:bg-surface-2/20">
+                              <td className="px-4 py-2.5 text-fg font-mono text-[11px]">
+                                {orderId ? (
+                                  // isCurrentTrackId ? (
+                                  //   <span>{orderId}</span>
+                                  // ) : (
+                                    <button
+                                      type="button"
+                                      onClick={() => onTrackIdClick?.(String(orderId), selectedCustomerName || '')}
+                                      className="text-cyan underline decoration-dotted underline-offset-[3px] hover:text-cyan-hover cursor-pointer font-mono font-medium text-[11px] focus:outline-none"
+                                      title={`View journey for order #${orderId}`}
+                                    >
+                                      {orderId}
+                                    </button>
+                                  // )
+                                ) : (
+                                  '—'
+                                )}
+                              </td>
+                              <td className="px-4 py-2.5 text-fg-dim font-mono">{order?.date || '—'}</td>
+                              <td className="px-4 py-2.5 text-right text-fg font-mono tabular-nums">
+                                ₹{fmtMoney(order?.amount)}
+                              </td>
+                              <td className="px-4 py-2.5 text-fg-dim">{order?.channel || '—'}</td>
+                              <td className="px-4 py-2.5">{getStatusBadge(order?.status)}</td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </table>
                   </div>
