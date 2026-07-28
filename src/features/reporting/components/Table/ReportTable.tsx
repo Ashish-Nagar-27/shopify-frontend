@@ -24,7 +24,7 @@ import {
   TableCell,
 } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
+import { AppTooltip } from '@/components/shared/AppTooltip';
 import { ReportTablePagination } from './ReportTablePagination';
 
 function renderCell(
@@ -252,14 +252,9 @@ export function ReportTable({
           <>
             {colDef.label}
             {colDef.info && (
-              <Tooltip>
-                <TooltipTrigger>
-                  <span style={{ marginLeft: 4, color: 'var(--fg-faint)', cursor: 'help' }}>ⓘ</span>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{colDef.infoText || "Information"}</p>
-                </TooltipContent>
-              </Tooltip>
+              <AppTooltip content={colDef.infoText || "Information"}>
+                <span style={{ marginLeft: 4, color: 'var(--fg-faint)', cursor: 'help' }}>ⓘ</span>
+              </AppTooltip>
             )}
             {sortKey === colDef.key && (
               <span className="text-cyan ml-1">{sortDir === 'asc' ? '▲' : '▼'}</span>
@@ -279,7 +274,7 @@ export function ReportTable({
         },
       };
     });
-  }, [fullCols, sortKey, sortDir, handleSalesClick]);
+  }, [fullCols, sortKey, sortDir, handleSalesClick]); 
 
   const table = useReactTable({
     data: rows,
