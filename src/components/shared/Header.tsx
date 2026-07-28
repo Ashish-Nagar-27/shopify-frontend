@@ -17,8 +17,6 @@ import { MONTHS, fmtDate, cn } from '@/lib/utils';
 import type { DateRange } from './CalendarPopover';
 import * as Icon from '@/components/icons';
 import { CalendarPopover } from './CalendarPopover';
-import { ThemeSwitcher } from './ThemeSwitcher';
-import { Button } from "../ui/button";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useDateStore, type StoreKeys } from "@/store/useDateStore";
 
@@ -26,10 +24,12 @@ const ctrlBase = 'inline-flex items-center justify-center gap-2 h-9 bg-surface b
 
 export default function TopBar({
   showDatePicker,
-  dateStoreKey
+  dateStoreKey,
+  title
 }: {
   showDatePicker?: boolean;
   dateStoreKey?: StoreKeys;
+  title?: string;
 }) {
 
   const { pathname } = useLocation();
@@ -84,9 +84,12 @@ export default function TopBar({
   return (
     <header className="flex items-center justify-between px-7 py-[18px] gap-6 border-b border-border-soft bg-[linear-gradient(180deg,oklch(0.16_0.02_235/0.9),oklch(0.16_0.02_235/0.4))] [backdrop-filter:blur(8px)] sticky top-0 z-[4]">
       <div className="flex items-center gap-[14px]">
-        <h1 className="text-[22px] font-semibold tracking-[-0.01em] m-0">Performance</h1>
-        <span className="text-fg-faint font-light">/</span>
-        <button
+        <h1 className="text-[22px] font-semibold tracking-[-0.01em] m-0">{title}</h1>
+
+
+        {/* profile dropdown section */}
+        {/* <span className="text-fg-faint font-light">/</span> */}
+        {/* <button
           className="flex items-center gap-[10px] py-[7px] pr-3 pl-2 bg-surface border border-border-soft rounded-full text-[13px] text-fg-dim transition-[border-color] duration-150 hover:border-border"
           title="Switch account">
           <span className="w-6 h-6 rounded-full bg-[linear-gradient(135deg,var(--magenta),var(--cyan))] grid place-items-center text-[oklch(0.10_0.018_240)] font-bold text-[11px]">
@@ -94,7 +97,8 @@ export default function TopBar({
           </span>
           <span>Ravi · Pumalyze Demo</span>
           <Icon.chevronDown width="14" height="14" style={{ color: 'var(--fg-mute)' }} />
-        </button>
+        </button> */}
+
       </div>
 
       <div className="flex items-center gap-[10px]">
