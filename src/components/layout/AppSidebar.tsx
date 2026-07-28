@@ -17,7 +17,7 @@ export function AppSidebar() {
         to="/"
         className="w-11 h-11 rounded-[11px] bg-[linear-gradient(135deg,var(--bg-deep),oklch(0.20_0.04_220))] grid place-items-center overflow-hidden mb-3 no-underline shadow-[0_0_0_1px_var(--border-soft),0_8px_18px_-10px_oklch(0_0_0/0.6)]"
         title="Pumalyze">
-        <span className="text-cyan font-bold text-[18px]">P</span>
+        <img src='/pumalyze-logo.png' alt="Pumalyze Logo" className="w-13 h-10 w-full h-full object-cover" />
       </Link>
 
       <nav className="flex flex-col gap-0.5 flex-1 items-center pt-[6px]">
