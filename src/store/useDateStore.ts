@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { format, subDays } from 'date-fns';
+import { persist } from 'zustand/middleware';
 
 export type DateRange = [string | undefined, string | undefined];
 
@@ -10,7 +11,7 @@ interface DateState {
     reportingDates: DateRange;
     creativeDates: DateRange;
     settingDates: DateRange;
-    
+
     setDateRange: (key: StoreKeys, range: DateRange) => void;
 }
 
@@ -21,15 +22,28 @@ const getDefaults = (): DateRange => {
     return [format(startOfLast7Days, "MMM dd yyyy"), format(yesterday, "MMM dd yyyy")];
 };
 
-export const useDateStore = create<DateState>((set) => ({
-    dashboardDates: getDefaults(),
-    reportingDates: getDefaults(),
-    creativeDates: getDefaults(),
-    settingDates: getDefaults(),
-    
-    setDateRange: (key, range) => 
-        set((state) => ({
-            ...state,
-            [key]: range,
-        })),
-}));
+export const useDateStore = create<DateState>()(
+    persist(
+        (set) => ({
+            dashboardDates: getDefaults(),
+            reportingDates: getDefaults(),
+            creativeDates: getDefaults(),
+            settingDates: getDefaults(),
+
+            setDateRange: (key, range) =>
+                set((state) => ({
+                    ...state,
+                    [key]: range,
+                })),
+        }),
+        {
+            name: "shopify_client_date",
+            partialize: (state) => ({
+                dashboardDates: state.dashboardDates,
+                reportingDates: state.reportingDates,
+                creativeDates: state.creativeDates,
+                settingDates: state.settingDates,
+            }),
+        }
+    )
+);
