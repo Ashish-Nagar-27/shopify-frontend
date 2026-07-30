@@ -6,7 +6,7 @@ export function AppSidebar() {
   const items = [
     { key: "dash",   icon: <Icon.grid     width="18" height="18" />, label: "Dashboard", href: "/dashboard"     },
     { key: "report", icon: <Icon.chart    width="18" height="18" />, label: "Reporting", href: "/reporting" },
-    { key: "aud",    icon: <Icon.audience width="18" height="18" />, label: "Audiences", href: "/audiences" },
+    { key: "creative",    icon: <Icon.ad width="18" height="18" />, label: "Creative", href: "/creative" },
     { key: "expl",   icon: <Icon.search   width="18" height="18" />, label: "Explore"   , href: "/explore"           },
     { key: "onboarding",    icon: <Icon.funnel   width="18" height="18" />, label: "Onboarding"   , href: "/onboarding"           },
   ];
