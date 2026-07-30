@@ -39,6 +39,8 @@
   --color-cyan-soft: var(--cyan-soft);
   --color-magenta: var(--magenta);
   --color-magenta-soft: var(--magenta-soft);
+  --color-violet: var(--violet);
+  --color-blue-accent: var(--blue-accent);
 
   /* Semantic */
   --color-pos: var(--pos);
@@ -115,6 +117,8 @@
 
   --magenta: oklch(0.56 0.22 340);
   --magenta-soft: oklch(0.72 0.20 340 / 0.14);
+  --violet: oklch(0.74 0.16 300);
+  --blue-accent: oklch(0.72 0.15 232);
 
   --pos: oklch(0.49 0.17 155);
   --pos-soft: oklch(0.80 0.16 155 / 0.14);
@@ -200,6 +204,8 @@
   /* Accent – magenta */
   --magenta: oklch(0.72 0.20 340);
   --magenta-soft: oklch(0.72 0.20 340 / 0.16);
+  --violet: oklch(0.74 0.16 300);
+  --blue-accent: oklch(0.72 0.15 232);
 
   /* Semantic */
   --pos: oklch(0.80 0.16 155);
@@ -289,6 +295,8 @@
   /* Accent – magenta */
   --magenta: oklch(0.72 0.20 340);
   --magenta-soft: oklch(0.72 0.20 340 / 0.16);
+  --violet: oklch(0.74 0.16 300);
+  --blue-accent: oklch(0.72 0.15 232);
 
   /* Semantic */
   --pos: oklch(0.80 0.16 155);
