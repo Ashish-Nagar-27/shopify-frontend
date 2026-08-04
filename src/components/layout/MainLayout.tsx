@@ -1,6 +1,7 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuthStore } from "@/store/useAuthStore";
 import { AppSidebar } from "./AppSidebar";
+import { RouteErrorBoundary } from "../ErrorBoundry/RouteErrorBoundary";
 
 
 export function MainLayout() {
@@ -8,7 +9,6 @@ export function MainLayout() {
     const { isLoading } = useAuthStore();
     const isAuthenticated = true
     const location = useLocation()
-    
 
     const showSidebar = !location.pathname.includes('/onboarding')
 
@@ -46,13 +46,15 @@ export function MainLayout() {
     }
 
     return (
-          <div className={`grid ${showSidebar ? 'grid-cols-[72px_1fr]' : 'grid-cols-1'} min-h-screen`}>
-      {showSidebar && <AppSidebar />}
-      <div className="flex flex-col min-w-0">
-        <>
-            <Outlet /> 
-        </>
-      </div>
-    </div>
+        <div className={`grid ${showSidebar ? 'grid-cols-[72px_1fr]' : 'grid-cols-1'} min-h-screen`}>
+            {showSidebar && <AppSidebar />}
+            <div className="flex flex-col min-w-0">
+                <>
+                    <RouteErrorBoundary>
+                        <Outlet />
+                    </RouteErrorBoundary>
+                </>
+            </div>
+        </div>
     );
 }
