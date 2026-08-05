@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import { Fragment, type FC } from "react";
 import { fmtO } from "../utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -71,7 +71,9 @@ export const ChannelMetrics: FC = () => {
                             className="grid min-w-[1000px] grid-cols-[1.3fr_0.9fr_0.9fr_1fr_0.9fr_1fr_1.1fr_1.1fr_0.8fr_0.8fr] items-center gap-[10px] border-b border-border-soft px-[20px] py-[11px] transition-colors duration-120 last:border-b-0 hover:bg-bg-row-hover"
                         >
                             {row.getVisibleCells().map((cell) => (
-                                flexRender(cell.column.columnDef.cell, cell.getContext())
+                                <Fragment key={cell.id}>
+                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                </Fragment>
                             ))}
                         </div>
                     ))
