@@ -95,3 +95,69 @@ export interface CustomTooltipProps {
     label?: string;
     chartData: any[];
 }
+
+// API Response Types
+
+export interface GraphSalesDataPoint {
+    date: string;
+    value: number;
+}
+
+export interface GraphSalesMetricItem {
+    total?: number;
+    compare?: number;
+    data?: GraphSalesDataPoint[];
+    [key: string]: unknown;
+}
+
+export interface DashboardGraphSalesResponse {
+    roi?: GraphSalesMetricItem;
+    revenue?: GraphSalesMetricItem;
+    sales?: GraphSalesMetricItem;
+    spend?: GraphSalesMetricItem;
+    [key: string]: GraphSalesMetricItem | undefined;
+}
+
+export interface ChannelPerformancePoint {
+    date: string;
+    value: number;
+    [key: string]: unknown;
+}
+
+export interface ChannelMetricItem {
+    accountpresent?: boolean;
+    data?: ChannelPerformancePoint[];
+    [key: string]: unknown;
+}
+
+export interface DashboardGraphSalesMetricsResponse {
+    overalltotal?: ChannelMetricItem | unknown;
+    adspend?: ChannelMetricItem | unknown;
+    [channelKey: string]: ChannelMetricItem | unknown;
+}
+
+export interface SourceMetricItem {
+    pct?: number;
+    count?: number;
+}
+
+export interface TrafficSessionsResponse {
+    billable_sessions?: {
+        value?: number;
+        compare?: number;
+    };
+    sources?: {
+        custom?: SourceMetricItem;
+        direct?: SourceMetricItem;
+        organic?: SourceMetricItem;
+        paid?: SourceMetricItem;
+        social?: SourceMetricItem;
+        [key: string]: SourceMetricItem | undefined;
+    };
+    visitors?: {
+        total?: number;
+        new?: SourceMetricItem;
+        returning?: SourceMetricItem;
+    };
+    [key: string]: unknown;
+}
