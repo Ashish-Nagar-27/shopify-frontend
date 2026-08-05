@@ -102,7 +102,7 @@ export function FilterPopover({ open, anchorRef, onClose, value, onApply }: Filt
   const changed = JSON.stringify(local) !== JSON.stringify(FILTER_DEFAULTS);
 
   return (
-    <div className="absolute right-0 top-[calc(100%+8px)] z-[40] w-[520px] bg-bg-deep border border-border rounded-[14px] shadow-[0_24px_60px_-16px_oklch(0_0_0/0.7)] overflow-hidden" ref={ref}>
+    <div className="absolute right-0 top-[calc(100%+8px)] z-[40] w-[520px] bg-bg-deep border border-border rounded-[14px] shadow-[0_24px_60px_-16px_oklch(0_0_0/0.7)]" ref={ref}>
       <div className="flex items-center justify-between px-4 py-[14px] border-b border-border-soft">
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <Icon.filter width="14" height="14" style={{ color: 'var(--cyan)' }} />

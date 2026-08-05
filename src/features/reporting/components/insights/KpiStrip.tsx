@@ -1,9 +1,9 @@
 
 import { MiniSpark } from './MiniSpark';
 import * as Icon from '@/components/icons';
-import { useReportingTableData } from '../../hooks/useReportingTableData';
 import { fmt } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
+import useGraphSalesMetrics from '../../hooks/useGraphSalesMetrics';
 
 const formatVal = (val: number | string | null | undefined, label: string): string => {
   if (val == null) return '—';
@@ -128,7 +128,7 @@ function KpiStrip({ KPISData }: { KPISData: any[] }) {
 }
 
 export default function KpiStrips() {
-  const { graphData, graphDataLoading } = useReportingTableData();
+  const { graphData, graphDataLoading } = useGraphSalesMetrics();
 
   const KPISData = [
     {

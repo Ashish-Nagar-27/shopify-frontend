@@ -2,10 +2,10 @@ import { useState, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { FILTER_DEFAULTS } from '@/lib/data';
 import type { FilterState, ColumnDef, CampaignRow, TabKey } from '@/lib/types';
-import { ColumnsMenu } from './ColumnsMenu';
-import { FilterPopover } from './FilterPopover';
+import { ColumnsMenu } from './customize-columns/ColumnsMenu';
+import { FilterPopover } from './filter/FilterPopover';
 import * as Icon from '@/components/icons';
-import { ExportReportButton } from './ExportReportButton';
+import { ExportReportButton } from './export-table-data/ExportReportButton';
 
 const ctrlBase = 'inline-flex items-center gap-2 h-9 px-3 bg-surface border border-border-soft rounded-[10px] text-fg-dim text-[13px] transition-[border-color,color,background] duration-150 hover:border-border hover:text-fg';
 

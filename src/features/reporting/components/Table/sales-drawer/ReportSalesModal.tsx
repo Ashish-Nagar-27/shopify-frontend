@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useReportingTableSaleData } from '../../hooks/useReportingTableData';
+import { useReportingTableSaleData } from '../../../hooks/useReportingTableData';
 import type { CampaignRow } from '@/lib/types';
 import { ReportSalesDrawerHeader } from './ReportSalesDrawerHeader';
 import { ReportSalesListPanel } from './ReportSalesListPanel';

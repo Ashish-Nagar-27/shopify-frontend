@@ -5,7 +5,7 @@ import type { CampaignRow, FilterState, TabKey, ColumnDef } from '@/lib/types';
 import { SrcIcon } from './SrcIcon';
 import { StatusBadge } from './StatusBadge';
 import * as Icon from '@/components/icons';
-import { ReportSalesModal } from './ReportSalesModal';
+import { ReportSalesModal } from './sales-drawer/ReportSalesModal';
 import {
   flexRender,
   useReactTable,
@@ -211,6 +211,8 @@ export function ReportTable({
   someSelectedOnPage,
   filter
 }: ReportTableProps) {
+
+
   const isCheckable = tab === 'campaign' || tab === 'adset';
 
   const [selectedSalesRow, setSelectedSalesRow] = useState<CampaignRow | null>(null);
@@ -295,6 +297,7 @@ export function ReportTable({
     getExpandedRowModel: getExpandedRowModel(),
      getPaginationRowModel: getPaginationRowModel()
   });
+
 
 
 

@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 import { ALL_COLUMNS, COL_BY_KEY, DEFAULT_VISIBLE } from '@/lib/data';
 import type { ColumnDef, CampaignRow, TabKey } from '@/lib/types';
 import * as Icon from '@/components/icons';
-import { exportReportToExcel } from '../../utils/exportReport';
+import { exportReportToExcel } from '../../../utils/exportReport';
 import {
   Dialog,
   DialogContent,

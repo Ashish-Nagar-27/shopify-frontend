@@ -18,6 +18,8 @@ export function ReportSelectionBar({
 }: ReportSelectionBarProps) {
   if (selIds.length === 0) return null;
 
+  
+
   return (
     <div className="flex items-center justify-between gap-4 px-5 py-3 bg-[linear-gradient(90deg,var(--cyan-soft),oklch(0.72_0.20_340/0.08))] border-b border-[oklch(0.82_0.14_200/0.30)] border-t border-t-[oklch(0.82_0.14_200/0.20)] [animation:sel-in_0.15s_ease]">
       <div className="flex items-center gap-4">

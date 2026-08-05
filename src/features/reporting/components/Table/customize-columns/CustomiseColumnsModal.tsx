@@ -6,7 +6,7 @@ import * as Icon from '@/components/icons';
 import { SortableColumnsList } from './SortableColumnsList';
 import { ColumnViewsSidebar } from './ColumnViewsSidebar';
 import { useQuery } from '@tanstack/react-query';
-import { reportingApi } from '../../api/reportingApi';
+import { reportingApi } from '../../../api/reportingApi';
 
 interface Props {
   open: boolean;
@@ -33,7 +33,7 @@ export function CustomiseColumnsModal({
   const [search, setSearch]     = useState('');
   const [tab, setTab]           = useState('all');
   const [view, setView]         = useState(currentView || 'myview');
-  console.log('view ', view, views)
+
 
   const { data: viewColumnsData, isFetching: isFetchingViewColumns } = useQuery({
     queryKey: ["reportingCustomizedColumns", view],
@@ -96,7 +96,7 @@ export function CustomiseColumnsModal({
     'px-3 py-[6px] bg-surface border border-border-soft rounded-[7px] text-[12px] text-fg-dim font-medium inline-flex items-center gap-1 transition-all duration-[120ms] hover:border-border',
     tab === k && 'bg-cyan-soft border-cyan-deep text-cyan',
   );
-  console.log('view-currentView-views=', view, '-', currentView , '-', views)
+
   return (
     <div
       className="fixed inset-0 z-[100] bg-[oklch(0_0_0/0.5)] [backdrop-filter:blur(6px)] grid place-items-center p-6 [animation:modal-veil-in_0.18s_ease]"

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import * as Icon from '@/components/icons';
 import type { TabKey } from '@/lib/types';
-import { useReportingTableData } from '../../hooks/useReportingTableData';
+import { useReportingAccount,        useReportingSource } from '../../hooks/useReportingTableData';
 import { useReportingStore } from '@/store/useReportingStore';
 
 interface ReportFilterBarProps {
@@ -80,7 +80,10 @@ export function ReportFilterBar({
   search,
   onSearchChange,
 }: ReportFilterBarProps) {
-  const { sourceData, adsAccountsData } = useReportingTableData();
+  const { sourceData } = useReportingSource();
+  const { adsAccountsData } = useReportingAccount();
+  
+
   const { traffic, account, setTraffic, setAccount } = useReportingStore();
 
   const getSearchPlaceholder = () => {

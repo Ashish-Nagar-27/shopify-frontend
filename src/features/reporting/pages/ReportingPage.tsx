@@ -4,11 +4,11 @@ import { Insights } from "../components/insights/Insights";
 import { AttributeReport } from "../components/Table/AttributeReportTable";
 
 export function ReportingPage() {
+
   return (
     <>
       <TopBar
         showDatePicker={true}
-        // dateStoreKey={showDatePicker ? "reportingDates" : "dashboardDates"}
         dateStoreKey={"reportingDates"}
         title="Performance"
       />

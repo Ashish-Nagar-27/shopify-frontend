@@ -1,4 +1,4 @@
-import { useReportingCustomerProfile, useReportingTableSaleJourney } from '../../hooks/useReportingTableData';
+import { useReportingCustomerProfile, useReportingTableSaleJourney } from '../../../hooks/useReportingTableData';
 import { cn, fmtMoney } from '@/lib/utils';
 import * as Icon from '@/components/icons';
 import { motion } from "motion/react";
