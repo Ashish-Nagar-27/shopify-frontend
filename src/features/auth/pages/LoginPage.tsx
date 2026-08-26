@@ -17,6 +17,7 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { toast } from "sonner";
+import { AxiosError } from "axios";
 
 const loginSchema = z.object({
     username: z.string().email("Enter a valid email address"),
@@ -46,7 +47,7 @@ export function LoginPage() {
         try {
              await login(data);
              const user = useAuthStore.getState().user
-             console.log("user ", user)
+           
             if(user?.onboarding_status === "completed"){
                 navigate("/reporting", { replace: true });
             }else{
@@ -55,7 +56,11 @@ export function LoginPage() {
             toast.success("Login Successfull");
         } catch (error) {
             console.error("Login failed:", error);
-            setFormError("Invalid email or password. Please try again.");
+            if(error instanceof AxiosError){
+                setFormError(error.response?.data?.message || "Invalid email or password. Please try again.");
+            }else{
+                setFormError("Invalid email or password. Please try again.");
+            }
         }
     }
 
