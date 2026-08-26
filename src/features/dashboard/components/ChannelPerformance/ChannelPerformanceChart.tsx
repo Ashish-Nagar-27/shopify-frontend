@@ -1,22 +1,29 @@
-import {  type FC } from "react";
+import type { FC } from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import type { ChartConfig } from "@/components/ui/chart";
 import { ChannelPerformanceTooltip } from "./ChannelPerformanceTooltip";
-import { PERF_SERIES } from "./constants";
-import { useChannelPerformanceData, type ChartDataItem } from "../../hooks/useChannelPerformanceData";
+import type { ChartDataItem, ChannelSeries } from "../../hooks/useChannelPerformanceData";
 
 interface ChannelPerformanceChartProps {
     chartData: ChartDataItem[];
     allMax: number;
     chartConfig: ChartConfig;
+    series: ChannelSeries[];
     ticks: number[];
     tickFormatter: (value: number, index: number) => string;
 }
 
-export const ChannelPerformanceChart: FC<ChannelPerformanceChartProps> = () => {
-  const { chartData, allMax, chartConfig,  ticks, tickFormatter } = useChannelPerformanceData();
+export const ChannelPerformanceChart: FC<ChannelPerformanceChartProps> = ({
+    chartData,
+    allMax,
+    chartConfig,
+    series,
+    ticks,
+    tickFormatter,
+}) => {
 
+ 
     return (
         <ChartContainer config={chartConfig} className="aspect-auto h-[300px] w-full">
             <AreaChart
@@ -36,7 +43,7 @@ export const ChannelPerformanceChart: FC<ChannelPerformanceChartProps> = () => {
                             <feMergeNode in="SourceGraphic" />
                         </feMerge>
                     </filter>
-                    {PERF_SERIES.map((s) => (
+                    {series.map((s) => (
                         <linearGradient key={s.key} id={`ovg-${s.key}`} x1="0" y1="0" x2="0" y2="1">
                             <stop offset="0%" stopColor={s.stroke} stopOpacity="0.26" />
                             <stop offset="100%" stopColor={s.stroke} stopOpacity="0" />
@@ -73,10 +80,10 @@ export const ChannelPerformanceChart: FC<ChannelPerformanceChartProps> = () => {
                 <YAxis
                     domain={[0, allMax]}
                     ticks={[0, allMax * 0.2, allMax * 0.4, allMax * 0.6, allMax * 0.8, allMax]}
-                    tickFormatter={(v) => `${Math.round(v)}K`}
+                    tickFormatter={(v) => `₹${Math.round(v)}K`}
                     axisLine={false}
                     tickLine={false}
-                    width={36}
+                    width={42}
                     tick={{
                         fill: "var(--fg-mute)",
                         fontSize: 10,
@@ -85,7 +92,7 @@ export const ChannelPerformanceChart: FC<ChannelPerformanceChartProps> = () => {
                     tickMargin={8}
                 />
                 <ChartTooltip
-                    content={<ChannelPerformanceTooltip chartData={chartData} />}
+                    content={<ChannelPerformanceTooltip chartData={chartData} series={series} />}
                     cursor={{
                         stroke: "var(--fg-dim)",
                         strokeWidth: 1,
@@ -94,7 +101,7 @@ export const ChannelPerformanceChart: FC<ChannelPerformanceChartProps> = () => {
                     }}
                     position={{ y: 12 }}
                 />
-                {PERF_SERIES.map((s) => (
+                {series.map((s) => (
                     <Area
                         key={s.key}
                         type="monotone"

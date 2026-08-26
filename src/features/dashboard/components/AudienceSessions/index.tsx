@@ -5,10 +5,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { DonutChartLoader, DonutChartContainer, type DonutChartSegment } from "./DonutChart";
 import { AppTooltip } from "@/components/shared/AppTooltip";
 import useAudienceSessions from "../../hooks/useAudienceSessions";
+import { useInView } from "@/hooks/useInView";
 
 
 
 export const AudienceSessions: FC = () => {
+    const [containerRef, isInView] = useInView<HTMLDivElement>({ triggerOnce: true });
 
     const { billableValue,
         tone,
@@ -19,11 +21,11 @@ export const AudienceSessions: FC = () => {
         visitorsTotal,
         segs,
         isLoading, TOOLTIPS
-    } = useAudienceSessions()
+    } = useAudienceSessions({ enabled: isInView });
 
 
     return (
-        <div className="rounded-[12px] border border-border-soft bg-surface shadow-card">
+        <div ref={containerRef} className="rounded-[12px] border border-border-soft bg-surface shadow-card">
 
             {/* header */}
             <div className="flex items-center justify-between border-b border-border-soft px-[20px] py-[16px]">

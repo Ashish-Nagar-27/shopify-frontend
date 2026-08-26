@@ -36,7 +36,7 @@ export const useGraphSalesMetrics = () => {
     });
 };
 
-export const useTrafficSessions = () => {
+export const useTrafficSessions = (options?: { enabled?: boolean }) => {
     const { dashboardDates } = useDateStore();
     const [startDate, endDate] = dashboardDates;
 
@@ -49,9 +49,6 @@ export const useTrafficSessions = () => {
            
             return await dashboardApi.trafficSessions(queryParams);
         },
-        enabled: Boolean(startDate && endDate),
+        enabled: Boolean(startDate && endDate) && (options?.enabled ?? true),
     });
-
-
-
 };

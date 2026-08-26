@@ -1,29 +1,28 @@
 import { getCoreRowModel, useReactTable, type ColumnDef } from "@tanstack/react-table";
-import { fmtO } from "../components/utils";
+import { fmtO, formatChannelLabel, getChannelColor } from "../components/utils";
 import { useMemo } from "react";
 import type { ChannelMetricData } from "../types";
 import { useGraphSalesMetrics } from "./useDashboardData";
 
-const CHANNEL_METADATA: Record<string, { name: string; color: string }> = {
-    google: { name: "Google", color: "var(--cyan)" },
-    meta: { name: "Meta", color: "var(--violet)" },
-    tiktok: { name: "TikTok", color: "var(--blue-accent)" },
-    twitter: { name: "X (Twitter)", color: "var(--magenta)" },
-};
-
-
 const useChannelMetricsData = () => {
     const { data, isLoading, isError } = useGraphSalesMetrics();
     const channels = useMemo<ChannelMetricData[]>(() => {
-        if (!data) return [];
-        return Object.entries(data)
-            .filter(([key, channelData]: [string, any]) => key !== "adspend" && typeof channelData?.accountpresent === 'boolean' && channelData?.accountpresent)
-            .map(([key, channelData]: [string, any]) => {
-                const metadata = CHANNEL_METADATA[key] || {
-                    name: key.charAt(0).toUpperCase() + key.slice(1),
-                    color: "var(--fg-mute)",
-                };
+        if (!data || typeof data !== "object") return [];
 
+        let colorIdx = 0;
+
+        const list = Object.entries(data)
+            .filter(([key, channelData]: [string, any]) => {
+                if (key === "adspend" || key === "overalltotal") return false;
+                const isAccountPresent =
+                    typeof channelData?.accountpresent === "boolean"
+                        ? channelData.accountpresent
+                        : Boolean(channelData?.accountpresent);
+                return isAccountPresent;
+            })
+            .map(([key, channelData]: [string, any]) => {
+                const name = formatChannelLabel(key);
+                const color = getChannelColor(key, colorIdx++);
 
                 const spend = channelData.spend?.total ?? 0;
                 const conv = channelData.conversion?.total ?? 0;
@@ -33,8 +32,8 @@ const useChannelMetricsData = () => {
                 const sessions = channelData.session?.total ?? 0;
 
                 return {
-                    name: metadata.name,
-                    color: metadata.color,
+                    name,
+                    color,
                     sessions,
                     clicks,
                     conv,
@@ -46,6 +45,23 @@ const useChannelMetricsData = () => {
                     roi: channelData.roi?.total ?? 0,
                 };
             });
+
+        return list.sort((a, b) => {
+            const nameA = a.name.toLowerCase();
+            const nameB = b.name.toLowerCase();
+
+            const isGoogleA = nameA === "google";
+            const isGoogleB = nameB === "google";
+            if (isGoogleA && !isGoogleB) return -1;
+            if (!isGoogleA && isGoogleB) return 1;
+
+            const isMetaA = nameA === "meta" || nameA === "facebook";
+            const isMetaB = nameB === "meta" || nameB === "facebook";
+            if (isMetaA && !isMetaB) return -1;
+            if (!isMetaA && isMetaB) return 1;
+
+            return 0;
+        });
     }, [data]);
 
     const tot = useMemo(() => {

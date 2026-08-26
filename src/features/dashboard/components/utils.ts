@@ -17,3 +17,50 @@ export function smoothO(pts: [number, number][]): string {
     }
     return d;
 }
+
+export const STANDARD_PRESETS: Record<string, { label: string; color: string }> = {
+    google: { label: "Google", color: "var(--cyan)" },
+    meta: { label: "Meta", color: "var(--violet)" },
+    facebook: { label: "Meta", color: "var(--violet)" },
+};
+
+export const COLOR_PALETTE = [
+    "var(--cyan)",
+    "var(--violet)",
+    "var(--magenta)",
+    "var(--blue-accent)",
+    "var(--pos)",
+    "var(--warn)",
+    "#f97316",
+    "#8b5cf6",
+    "#06b6d4",
+    "#f43f5e",
+    "#84cc16",
+    "#10b981",
+    "#6366f1",
+    "#ec4899",
+];
+
+export const formatChannelLabel = (rawKey: string): string => {
+    const trimmed = rawKey.trim();
+    const normalized = trimmed.toLowerCase();
+    if (STANDARD_PRESETS[normalized]) {
+        return STANDARD_PRESETS[normalized].label;
+    }
+    if (trimmed === trimmed.toUpperCase() || trimmed === trimmed.toLowerCase()) {
+        return trimmed
+            .split(/\s+/)
+            .map((w) => (w.length <= 3 ? w.toUpperCase() : w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()))
+            .join(" ");
+    }
+    return trimmed;
+};
+
+export const getChannelColor = (rawKey: string, index: number): string => {
+    const normalized = rawKey.trim().toLowerCase();
+    if (STANDARD_PRESETS[normalized]) {
+        return STANDARD_PRESETS[normalized].color;
+    }
+    return COLOR_PALETTE[index % COLOR_PALETTE.length];
+};
+

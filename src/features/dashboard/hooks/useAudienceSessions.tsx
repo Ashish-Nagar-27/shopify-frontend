@@ -10,9 +10,14 @@ const TOOLTIPS: Record<string, string> = {
     Paid: "Traffic from paid ads.",
 };
 
-const useAudienceSessions = () => {
+interface UseAudienceSessionsOptions {
+    enabled?: boolean;
+}
 
-    const { data, isLoading, isError } = useTrafficSessions();
+const useAudienceSessions = (options?: UseAudienceSessionsOptions) => {
+
+    const { data, isLoading: isQueryLoading, isError } = useTrafficSessions(options);
+    const isLoading = isQueryLoading || !data;
 
     //   billable section data 
     const billableValue = data?.billable_sessions?.value ?? 0;
