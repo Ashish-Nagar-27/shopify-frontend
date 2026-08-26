@@ -1,4 +1,3 @@
-import { DashboardHeader } from "@/features/integration/components/DashboardHeader";
 import type { ReactNode } from "react";
 
 interface AuthLayoutProps {
@@ -10,11 +9,7 @@ interface AuthLayoutProps {
 export function AuthLayout({ children, title, subtitle }: AuthLayoutProps) {
     return (
         <>
-            {/* <DashboardHeader
-                userName={""}
-                userEmail={""}
-                onLogout={""}
-            /> */}
+
             <div className="relative flex  items-center justify-center overflow-hidden bg-background px-4 py-12">
                 {/* Decorative background elements */}
                 <div className="pointer-events-none absolute inset-0 overflow-hidden ">
@@ -27,18 +22,8 @@ export function AuthLayout({ children, title, subtitle }: AuthLayoutProps) {
                     {/* Logo / Brand */}
                     <div className="mb-8 text-center">
                         <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg shadow-primary/25">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className="h-7 w-7"
-                            >
-                                <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
-                            </svg>
+
+                            <img src='/pumalyze-logo.png' alt="Pumalyze Logo" className="w-13 h-10 w-full h-full object-cover" />
                         </div>
                         <h1 className="text-2xl font-bold tracking-tight text-foreground">
                             {title}
