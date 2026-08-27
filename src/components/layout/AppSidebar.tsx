@@ -7,8 +7,8 @@ export function AppSidebar() {
     { key: "dash",   icon: <Icon.grid     width="18" height="18" />, label: "Dashboard", href: "/dashboard"     },
     { key: "report", icon: <Icon.chart    width="18" height="18" />, label: "Reporting", href: "/reporting" },
     { key: "creative",    icon: <Icon.ad width="18" height="18" />, label: "Creative", href: "/creative" },
-    { key: "expl",   icon: <Icon.search   width="18" height="18" />, label: "Explore"   , href: "/explore"           },
-    { key: "onboarding",    icon: <Icon.funnel   width="18" height="18" />, label: "Onboarding"   , href: "/onboarding"           },
+    // { key: "expl",   icon: <Icon.search   width="18" height="18" />, label: "Explore"   , href: "/explore"           },
+    // { key: "onboarding",    icon: <Icon.funnel   width="18" height="18" />, label: "Onboarding"   , href: "/onboarding"           },
   ];
 
   return (
