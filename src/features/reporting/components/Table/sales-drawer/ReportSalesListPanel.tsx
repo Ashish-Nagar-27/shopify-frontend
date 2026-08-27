@@ -2,9 +2,11 @@ import { useState, useMemo } from 'react';
 import {
   flexRender,
   getCoreRowModel,
+  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
   type ColumnDef,
+  type PaginationState,
   type SortingState,
 } from '@tanstack/react-table';
 import { ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
@@ -29,6 +31,10 @@ export function ReportSalesListPanel({
   onTrackIdClick,
 }: ReportSalesListPanelProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 15,
+  });
 
   const formatOrderDate = (dateStr: string): string => {
     if (!dateStr) return '—';
@@ -142,11 +148,20 @@ export function ReportSalesListPanel({
     columns,
     state: {
       sorting,
+      pagination,
     },
     onSortingChange: setSorting,
+    onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
   });
+
+  const pageIndex = table.getState().pagination.pageIndex;
+  const pageSize = table.getState().pagination.pageSize;
+  const totalRows = data.length;
+  const startRow = totalRows === 0 ? 0 : pageIndex * pageSize + 1;
+  const endRow = Math.min((pageIndex + 1) * pageSize, totalRows);
 
   if (isLoading) {
     return (
@@ -261,6 +276,69 @@ export function ReportSalesListPanel({
           ))}
         </TableBody>
       </Table>
+
+      {/* Pagination Controls */}
+      <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border-soft bg-surface px-5 py-3 text-[11px] text-fg-mute">
+        <span className="font-mono text-fg-dim">
+          {totalRows === 0 ? '0-0 of 0' : `${startRow}-${endRow} of ${totalRows}`}
+        </span>
+
+        <div className="flex items-center gap-4">
+          {/* Rows per page dropdown */}
+          <div className="flex items-center gap-2">
+            <span>Rows per page:</span>
+            <select
+              value={pageSize}
+              onChange={(e) => {
+                table.setPageSize(Number(e.target.value));
+              }}
+              className="rounded border border-border-soft bg-surface px-2 py-1 font-mono text-[11px] text-fg focus:outline-none focus:border-cyan cursor-pointer"
+            >
+              {[ 15, 30, 50, 100].map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* First / Prev / Next / Last navigation buttons */}
+          <div className="flex items-center gap-1 font-mono">
+            <button
+              onClick={() => table.setPageIndex(0)}
+              disabled={!table.getCanPreviousPage()}
+              className="grid h-6 w-6 place-items-center rounded border border-border-soft bg-surface text-fg transition-colors hover:bg-surface-hi hover:text-fg disabled:pointer-events-none disabled:opacity-40 cursor-pointer"
+              title="First page"
+            >
+              {'|<'}
+            </button>
+            <button
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+              className="grid h-6 w-6 place-items-center rounded border border-border-soft bg-surface text-fg transition-colors hover:bg-surface-hi hover:text-fg disabled:pointer-events-none disabled:opacity-40 cursor-pointer"
+              title="Previous page"
+            >
+              {'<'}
+            </button>
+            <button
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+              className="grid h-6 w-6 place-items-center rounded border border-border-soft bg-surface text-fg transition-colors hover:bg-surface-hi hover:text-fg disabled:pointer-events-none disabled:opacity-40 cursor-pointer"
+              title="Next page"
+            >
+              {'>'}
+            </button>
+            <button
+              onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+              disabled={!table.getCanNextPage()}
+              className="grid h-6 w-6 place-items-center rounded border border-border-soft bg-surface text-fg transition-colors hover:bg-surface-hi hover:text-fg disabled:pointer-events-none disabled:opacity-40 cursor-pointer"
+              title="Last page"
+            >
+              {'>|'}
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
