@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link,  useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -21,7 +21,7 @@ const registerSchema = z
     .object({
         name: z.string().min(1, "Full name is required"),
         email: z.string().email("Enter a valid email address"),
-        phone: z.string().min(1, "Phone number is required"),
+        phone: z.string().regex(/^\+?[1-9]\d{7,14}$/, "Invalid phone number") ,
         password: z.string().min(6, "Password must be at least 6 characters"),
         confirmPassword: z.string().min(1, "Please confirm your password"),
         shopToken: z.string().optional(),
@@ -34,7 +34,6 @@ const registerSchema = z
 type RegisterValues = z.infer<typeof registerSchema>;
 
 export function RegisterPage() {
-    const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const { register, isLoading } = useAuthStore();
     const [formError, setFormError] = useState<string | null>(null);
