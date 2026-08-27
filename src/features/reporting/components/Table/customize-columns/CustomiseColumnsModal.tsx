@@ -74,7 +74,9 @@ export function CustomiseColumnsModal({
   if (!open) return null;
 
   const defaultsKeys = new Set(DEFAULT_VISIBLE);
-  const tabFiltered = ALL_COLUMNS.filter(c => {
+  const tabFiltered = ALL_COLUMNS
+    .filter(c => c.key !== 'name' && c.key !== 'status')
+  .filter(c => {
     if (tab === 'defaults') return defaultsKeys.has(c.key);
     if (tab === 'custom')   return !defaultsKeys.has(c.key);
     return true;
@@ -142,7 +144,7 @@ export function CustomiseColumnsModal({
             </div>
             <div className="flex items-center gap-[6px] flex-wrap">
               <button className={tabCls('all')}     onClick={() => setTab('all')}>All <span>({ALL_COLUMNS.length})</span></button>
-              <button className={tabCls('custom')}  onClick={() => setTab('custom')}>Custom <span>({ALL_COLUMNS.length - DEFAULT_VISIBLE.length})</span></button>
+              {/* <button className={tabCls('custom')}  onClick={() => setTab('custom')}>Custom <span>({ALL_COLUMNS.length - DEFAULT_VISIBLE.length})</span></button> */}
               <button className={tabCls('defaults')} onClick={() => setTab('defaults')}>Defaults <span>({DEFAULT_VISIBLE.length})</span></button>
             </div>
             <div className="flex-1 overflow-y-auto border border-border-soft rounded-[9px] bg-bg-overlay p-1 min-h-0">
