@@ -40,8 +40,7 @@ export function LoginPage() {
             password: "",
         },
     });
-//  console.log('isLoading ', isLoading)
-//               console.log("user ", user)
+
     async function onSubmit(data: LoginValues) {
         setFormError(null);
         try {
@@ -55,12 +54,21 @@ export function LoginPage() {
             }
             toast.success("Login Successfull");
         } catch (error) {
-            console.error("Login failed:", error);
-            if(error instanceof AxiosError){
-                setFormError(error.response?.data?.message || "Invalid email or password. Please try again.");
-            }else{
-                setFormError("Invalid email or password. Please try again.");
+            if (error instanceof AxiosError) {
+                const status = error.response?.status;
+                console.log('status ', status)
+                if (status === 500) {
+                    setFormError("Something went wrong. Please try again after some time.");
+                } else {
+                    setFormError(
+                        error.response?.data?.message ||
+                        "Something went wrong. Please try again after some time."
+                    );
+                }
+            } else {
+                setFormError("Something went wrong. Please try again after some time.");
             }
+
         }
     }
 
