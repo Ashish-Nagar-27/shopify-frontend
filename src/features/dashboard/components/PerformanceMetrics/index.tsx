@@ -3,10 +3,19 @@ import { Icon } from "../Icons";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AreaSpark } from "./AreaChart";
 import useChannelPerformanceData from "../../hooks/usePerformanceMatricsData";
+import { useDateStore } from "@/store/useDateStore";
+
 
 
 export const PerformanceMetrics: FC = () => {
     const { metricsToRender, isLoading } = useChannelPerformanceData();
+    const { dashboardDates } = useDateStore();
+
+    const dateRangeLabel = dashboardDates?.[0] && dashboardDates?.[1]
+        ? dashboardDates[0] === dashboardDates[1]
+            ? dashboardDates[0]
+            : `${dashboardDates[0]} - ${dashboardDates[1]}`
+        : "Last 7 days";
 
     return (
         <div className="rounded-[12px] border border-border-soft bg-surface shadow-card">
@@ -15,7 +24,7 @@ export const PerformanceMetrics: FC = () => {
                     Performance Metrics · <span className="text-cyan">All Channels</span>
                 </h3>
                 <span className="inline-flex h-[28px] items-center gap-[10px] rounded-[10px] border border-border-soft bg-surface px-[12px] font-mono text-[11px] text-fg-dim">
-                    Last 7 days
+                    {dateRangeLabel}
                 </span>
             </div>
 
