@@ -161,7 +161,6 @@ export function useCreativeTableData() {
     const [sorting, setSorting] = useState<SortingState>([
         { id: "spend", desc: true },
     ]);
-    console.log('sorting ', sorting)
 
     // -------------------------------------------------------------------------
     // 4. Filter Rows based on Format and Status pills

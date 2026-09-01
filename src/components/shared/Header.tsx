@@ -18,18 +18,16 @@ import type { DateRange } from './CalendarPopover';
 import * as Icon from '@/components/icons';
 import { CalendarPopover } from './CalendarPopover';
 import { useAuthStore } from "@/store/useAuthStore";
-import { useDateStore, type StoreKeys } from "@/store/useDateStore";
+import { useDateStore} from "@/store/useDateStore";
+import { NAV_ITEMS } from "@/constants/navigation";
+import useApiDataRefresh from "@/hooks/useApiDataRefresh";
 
 const ctrlBase = 'inline-flex items-center justify-center gap-2 h-9 bg-surface border border-border-soft rounded-[10px] text-fg-dim text-[13px] transition-[border-color,color,background] duration-150 hover:border-border hover:text-fg';
 
 export default function TopBar({
-  showDatePicker,
-  dateStoreKey,
-  title
+  showDatePicker=true,
 }: {
   showDatePicker?: boolean;
-  dateStoreKey?: StoreKeys;
-  title?: string;
 }) {
 
   const { pathname } = useLocation();
@@ -41,17 +39,14 @@ export default function TopBar({
   todayRef.current.setHours(0, 0, 0, 0);
   const today = todayRef.current;
 
-  const storeKey: StoreKeys = dateStoreKey || (() => {
-    const routeName = pathname.split('/')[1] || "dashboard";
-    const possibleKey = `${routeName}Dates`;
-    return (["dashboardDates", "reportingDates", "creativeDates", "settingDates"].includes(possibleKey))
-      ? (possibleKey as StoreKeys)
-      : "dashboardDates";
-  })();
+  const pageData = NAV_ITEMS.find((item) => item.href === pathname)
+  const dateKey = pageData?.dateKey
+ 
+  const currentDates = dateKey ? store[dateKey] : store['dashboardDates']
+  const startDateStr = currentDates?.[0];
+  const endDateStr = currentDates?.[1];
 
-  const currentDates = store[storeKey];
-  const startDateStr = currentDates[0];
-  const endDateStr = currentDates[1];
+
 
   const parseDateStr = (str: string | undefined, defaultDate: Date) => {
     if (!str) return defaultDate;
@@ -81,10 +76,14 @@ export default function TopBar({
     .toUpperCase()
     .slice(0, 2);
 
+
+    //  refresh button 
+  const { refresPageData } = useApiDataRefresh()
+
   return (
     <header className="flex items-center justify-between px-7 py-[18px] gap-6 border-b border-border-soft bg-[linear-gradient(180deg,oklch(0.16_0.02_235/0.9),oklch(0.16_0.02_235/0.4))] [backdrop-filter:blur(8px)] sticky top-0 z-[4]">
       <div className="flex items-center gap-[14px]">
-        <h1 className="text-[22px] font-semibold tracking-[-0.01em] m-0">{title}</h1>
+        <h1 className="text-[22px] font-semibold tracking-[-0.01em] m-0">{pageData?.headerTitle}</h1>
 
 
         {/* profile dropdown section */}
@@ -102,7 +101,7 @@ export default function TopBar({
       </div>
 
       <div className="flex items-center gap-[10px]">
-        {showDatePicker && <div style={{ position: 'relative' }}>
+        {showDatePicker && dateKey && <div style={{ position: 'relative' }}>
           <button
             className={cn(
               'inline-flex items-center gap-[10px] h-9 px-3 bg-surface border border-border-soft rounded-[10px] font-mono text-[12px] text-fg-dim cursor-pointer transition-[border-color] duration-150 hover:border-cyan-deep',
@@ -121,11 +120,11 @@ export default function TopBar({
             onClose={() => setCalOpen(false)}
             onApply={(r) => {
               console.log('r', r);
-              store.setDateRange(storeKey, r.formattedRange);
+              store.setDateRange(dateKey, r.formattedRange);
             }} />
         </div>
         }
-        <button className={cn(ctrlBase, 'w-9 px-0')} title="Refresh">
+        <button className={cn(ctrlBase, 'w-9 px-0')} title="Refresh" onClick={() => refresPageData(pageData?.href)}>
           <Icon.refresh width="16" height="16" />
         </button>
 

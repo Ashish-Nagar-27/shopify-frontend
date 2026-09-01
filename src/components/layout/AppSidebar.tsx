@@ -1,15 +1,10 @@
 import { Link, useLocation } from 'react-router-dom';
 import * as Icon from '@/components/icons';
+import { NAV_ITEMS } from '@/constants/navigation';
 
 export function AppSidebar() {
   const location = useLocation();
-  const items = [
-    { key: "dash",   icon: <Icon.grid     width="18" height="18" />, label: "Dashboard", href: "/dashboard"     },
-    { key: "report", icon: <Icon.chart    width="18" height="18" />, label: "Reporting", href: "/reporting" },
-    { key: "creative",    icon: <Icon.ad width="18" height="18" />, label: "Creative", href: "/creative" },
-    // { key: "expl",   icon: <Icon.search   width="18" height="18" />, label: "Explore"   , href: "/explore"           },
-    // { key: "onboarding",    icon: <Icon.funnel   width="18" height="18" />, label: "Onboarding"   , href: "/onboarding"           },
-  ];
+
 
   return (
     <aside className="w-[72px] sticky top-0 h-screen bg-[linear-gradient(180deg,var(--bg-deep),oklch(0.10_0.018_240))] border-r border-border-soft flex flex-col items-center py-[14px] gap-[6px] z-[5]">
@@ -21,7 +16,7 @@ export function AppSidebar() {
       </Link>
 
       <nav className="flex flex-col gap-0.5 flex-1 items-center pt-[6px]">
-        {items.map((it) => {
+        {NAV_ITEMS.map((it) => {
           const isActive = location.pathname.startsWith(it.href);
           return (
             <Link
@@ -37,7 +32,7 @@ export function AppSidebar() {
               {isActive && (
                 <span className="absolute left-[-14px] top-[10px] bottom-[10px] w-[3px] rounded-[0_3px_3px_0] bg-cyan shadow-[0_0_12px_var(--cyan)]" />
               )}
-              {it.icon}
+              {<it.icon width="18" height="18" />}
             </Link>
           );
         })}
