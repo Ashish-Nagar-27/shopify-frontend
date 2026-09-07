@@ -124,8 +124,16 @@ export default function TopBar({
             }} />
         </div>
         }
-        <button className={cn(ctrlBase, 'w-9 px-0')} title="Refresh" onClick={() => refresPageData(pageData?.href)}>
-          <Icon.refresh width="16" height="16" />
+        <button
+          className={cn(ctrlBase, 'w-9 px-0', 'group')}
+          title="Refresh"
+          onClick={() => refresPageData(pageData?.href)}
+        >
+          <Icon.refresh
+            width="16"
+            height="16"
+            className="transition-transform duration-500 group-hover:rotate-180"
+          />
         </button>
 
         {/* toggle  UI theme */}
