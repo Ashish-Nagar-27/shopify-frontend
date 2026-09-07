@@ -19,3 +19,5 @@ export const dashboardApi = {
         return response.data;
     },
 };
+
+export * from "./queryKeys";

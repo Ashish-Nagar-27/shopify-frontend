@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { reportingApi } from '../api/reportingApi';
+import { reportingApi, reportingKeys } from '../api';
 import { useDateStore } from '@/store/useDateStore';
 import { useReportingStore } from '@/store/useReportingStore';
 
@@ -25,10 +25,7 @@ export const useReportingTableData = () => {
 
 
     const { data: tableData, isLoading: tableDataLoading, error: tableDataError } = useQuery({
-        queryKey: [
-            "reportingTable",
-            { attribute, startDate, endDate, traffic, click_type, window: windowParam },
-        ],
+        queryKey: reportingKeys.table({ attribute, startDate, endDate, traffic, click_type, window: windowParam }),
         queryFn: async () => {
             const queryParams = new URLSearchParams();
 
@@ -71,10 +68,7 @@ export const useReportingTableSaleData = (params: TableSaleDataParams, enabled =
     const islead = false;
 
     return useQuery({
-        queryKey: [
-            "reportingTableSaleData",
-            { adid, startDate, endDate, channel, attribute: attributeParam, islead, click_type, window: windowParam },
-        ],
+        queryKey: reportingKeys.tableSaleData({ adid, startDate, endDate, channel, attribute: attributeParam, islead, click_type, window: windowParam }),
         queryFn: async () => {
             const queryParams = new URLSearchParams();
             if (startDate) queryParams.append("startdate", startDate);
@@ -97,7 +91,7 @@ export const useReportingTableSaleData = (params: TableSaleDataParams, enabled =
 // fetching sale journey data
 export const useReportingTableSaleJourney = (trackid: string, enabled = false) => {
     return useQuery({
-        queryKey: ["reportingTableSaleJourney", trackid],
+        queryKey: reportingKeys.tableSaleJourney(trackid),
         queryFn: async () => {
             const queryParams = new URLSearchParams();
             if (trackid) queryParams.append("trackid", trackid);
@@ -114,7 +108,7 @@ export const useReportingTableSaleJourney = (trackid: string, enabled = false) =
 // fetching customer profile data
 export const useReportingCustomerProfile = (trackid: string, enabled = false) => {
     return useQuery({
-        queryKey: ["reportingCustomerProfile", trackid],
+        queryKey: reportingKeys.customerProfile(trackid),
         queryFn: async () => {
             const queryParams = new URLSearchParams();
             if (trackid) queryParams.append("trackid", trackid);
@@ -131,7 +125,7 @@ export const useReportingCustomerProfile = (trackid: string, enabled = false) =>
 export const useReportingAccount = () => {
     
     const { data: adsAccountsData, isLoading: adsAccountsDataLoading, error: adsAccountsDataError } = useQuery({
-        queryKey: ["reportingAdsAccounts"],
+        queryKey: reportingKeys.adsAccounts(),
         queryFn: async () => {
             const data = await reportingApi.getAdsAccounts();
             return data;
@@ -145,7 +139,7 @@ export const useReportingAccount = () => {
 // fetching sources data
 export const useReportingSource = () => {
     const { data: sourceData, isLoading: sourceDataLoading, error: sourceDataError } = useQuery({
-        queryKey: ["reportingSource"],
+        queryKey: reportingKeys.source(),
         queryFn: async () => {
             const data = await reportingApi.getSource();
             return data;

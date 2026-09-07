@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { dashboardApi } from "../api";
+import { dashboardApi, dashboardKeys } from "../api";
 import { useDateStore } from "@/store/useDateStore";
 
 export const useGraphSales = () => {
@@ -7,7 +7,7 @@ export const useGraphSales = () => {
     const [startDate, endDate] = dashboardDates;
 
     return useQuery({
-        queryKey: ["dashboardGraphSales", { startDate, endDate}],
+        queryKey: dashboardKeys.graphSales({ startDate, endDate }),
         queryFn: async () => {
             const queryParams = new URLSearchParams();
             if (startDate) queryParams.append("startdate", startDate);
@@ -24,7 +24,7 @@ export const useGraphSalesMetrics = () => {
     const [startDate, endDate] = dashboardDates;
 
     return useQuery({
-        queryKey: ["dashboardGraphSalesMetrics", { startDate, endDate }],
+        queryKey: dashboardKeys.graphSalesMetrics({ startDate, endDate }),
         queryFn: async () => {
             const queryParams = new URLSearchParams();
             if (startDate) queryParams.append("startdate", startDate);
@@ -41,7 +41,7 @@ export const useTrafficSessions = (options?: { enabled?: boolean }) => {
     const [startDate, endDate] = dashboardDates;
 
     return useQuery({
-        queryKey: ["dashboardTrafficSessions", { startDate, endDate }],
+        queryKey: dashboardKeys.trafficSessions({ startDate, endDate }),
         queryFn: async () => {
             const queryParams = new URLSearchParams();
             if (startDate) queryParams.append("startdate", startDate);

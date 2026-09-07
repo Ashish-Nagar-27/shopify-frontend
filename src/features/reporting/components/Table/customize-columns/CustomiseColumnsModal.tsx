@@ -6,7 +6,7 @@ import * as Icon from '@/components/icons';
 import { SortableColumnsList } from './SortableColumnsList';
 import { ColumnViewsSidebar } from './ColumnViewsSidebar';
 import { useQuery } from '@tanstack/react-query';
-import { reportingApi } from '../../../api/reportingApi';
+import { reportingApi, reportingKeys } from '../../../api';
 
 interface Props {
   open: boolean;
@@ -36,7 +36,7 @@ export function CustomiseColumnsModal({
 
 
   const { data: viewColumnsData, isFetching: isFetchingViewColumns } = useQuery({
-    queryKey: ["reportingCustomizedColumns", view],
+    queryKey: reportingKeys.customizedColumns(view),
     queryFn: () => reportingApi.getCustomizedColumns(view),
     enabled: open && !!view,
     staleTime: Infinity,

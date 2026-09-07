@@ -3,7 +3,7 @@ import { COL_BY_KEY, COLUMN_PRESETS, mapPresetViewName } from '@/lib/data';
 import type { ColumnDef } from '@/lib/types';
 import { useAuthStore } from "@/store/useAuthStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { reportingApi } from "../api/reportingApi";
+import { reportingApi, reportingKeys } from "../api";
 
 
 const useCustomizeColumns = () => {
@@ -27,7 +27,7 @@ const useCustomizeColumns = () => {
   // const { customizedColumnsData, updateColumnsMutation, deleteColumnsMutation } = useReportingTableData();
   const queryClient = useQueryClient();
   const { data: customizedColumnsData, isLoading: customizedColumnsDataLoading, error: customizedColumnsDataError } = useQuery({
-    queryKey: ["reportingCustomizedColumns"],
+    queryKey: reportingKeys.customizedColumns(),
     queryFn: async () => {
       const data = await reportingApi.getCustomizedColumns();
       console.log("Customized Columns Data:", data);
@@ -41,7 +41,7 @@ const useCustomizeColumns = () => {
       return await reportingApi.updateCustomizedColumns(updatecols, viewName);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["reportingCustomizedColumns"] });
+      queryClient.invalidateQueries({ queryKey: reportingKeys.customizedColumns() });
     },
   });
 
@@ -51,7 +51,7 @@ const useCustomizeColumns = () => {
       return await reportingApi.deleteCustomizedColumns(viewName);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["reportingCustomizedColumns"] });
+      queryClient.invalidateQueries({ queryKey: reportingKeys.customizedColumns() });
     },
   });
   

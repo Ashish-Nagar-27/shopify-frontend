@@ -1,4 +1,4 @@
-import { creativesApi } from "../api";
+import { creativesApi, creativeKeys } from "../api";
 import { useDateStore } from "@/store/useDateStore";
 import { useQuery } from "@tanstack/react-query";
 
@@ -12,7 +12,7 @@ export function useFacebookCreativeData() {
   const [startDate, endDate] = creativeDates;
 
   return useQuery<FacebookCreativeInsightsResponse>({
-    queryKey: ["facebookCreativeData", { startDate, endDate }],
+    queryKey: creativeKeys.facebookCreativeData({ startDate, endDate }),
     queryFn: async () => {
       const queryParams = new URLSearchParams();
       if (startDate) queryParams.append("startdate", startDate);

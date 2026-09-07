@@ -1,5 +1,5 @@
 import { useDateStore } from "@/store/useDateStore";
-import { reportingApi } from "../api/reportingApi";
+import { reportingApi, reportingKeys } from "../api";
 import { useQuery } from "@tanstack/react-query";
 
 
@@ -10,10 +10,7 @@ const useGraphSalesMetrics = () => {
     const [startDate, endDate] = reportingDates;
 
     const { data: graphData, isLoading: graphDataLoading, error: graphDataError } = useQuery({
-        queryKey: [
-            "reportingGraphSalesMetrics",
-            { startDate, endDate },
-        ],
+        queryKey: reportingKeys.graphSalesMetrics({ startDate, endDate }),
         queryFn: async () => {
             const queryParams = new URLSearchParams();
             if (startDate) queryParams.append("startdate", startDate);
