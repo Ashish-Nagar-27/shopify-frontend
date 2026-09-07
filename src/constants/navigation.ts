@@ -1,4 +1,4 @@
-import { grid, chart, ad ,} from "@/components/icons";
+import { grid, chart, ad, settings ,} from "@/components/icons";
 import type { StoreKeys } from "@/store/useDateStore";
 
 // key = uniqe for mapping
@@ -8,13 +8,14 @@ import type { StoreKeys } from "@/store/useDateStore";
 // dateKey = unque date key calendar associated with particular page used in global state and pages
 
 
-type TNavItem = {
+export type TNavItem = {
     key: string;
     icon: React.FC<React.SVGProps<SVGSVGElement>>;
     label: string;
     href: string;
     headerTitle: string;
     dateKey: StoreKeys;
+    position?: 'top' | 'bottom';
 }
 
 
@@ -27,14 +28,16 @@ export const NAV_ITEMS: TNavItem[] = [
         href: "/dashboard",
         headerTitle: "Overview",
         dateKey: "dashboardDates",
+        position: "top",
     },
     {
         key: "report",
         icon: chart,
-        label: "reportingDates",
+        label: "Reporting",
         href: "/reporting",
         headerTitle: "Performance",
         dateKey: "reportingDates",
+        position: "top",
     },
     {
         key: "creative",
@@ -43,5 +46,19 @@ export const NAV_ITEMS: TNavItem[] = [
         href: "/creative",
         headerTitle: "Creative Insights",
         dateKey: "creativeDates",
+        position: "top",
     },
+    {
+        key: "settings",
+        icon: settings,
+        label: "Settings",
+        href: "/settings",
+        headerTitle: "Settings",
+        dateKey: "settingDates",
+        position: "bottom",
+    },
+
 ];
+
+export const TOP_NAV_ITEMS = NAV_ITEMS.filter((item) => item.position !== 'bottom');
+export const BOTTOM_NAV_ITEMS = NAV_ITEMS.filter((item) => item.position === 'bottom');
