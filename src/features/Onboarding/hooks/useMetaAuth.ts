@@ -16,7 +16,7 @@ export const metaConnectUrl_2 = (shortLivedToken: string) => {
         frontendBaseUrl = `http://${frontendBaseUrl}`;
     }
     // Using the same redirect_uri used in the initial OAuth request
-    const redirectUri = `${frontendBaseUrl}/onboarding/ad-channels`;
+    const redirectUri = location.pathname.includes('onboarding') ? `${frontendBaseUrl}/onboarding/ad-channels` : `${frontendBaseUrl}/setting/integration`;
     return `https://graph.facebook.com/v21.0/oauth/access_token?client_id=${import.meta.env.VITE_REACT_APP_APP_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&client_secret=${import.meta.env.VITE_REACT_APP_CLIENT_SECRET}&code=${shortLivedToken}`;
 };
 
@@ -39,7 +39,9 @@ export function useMetaAuth({ setConnectingMeta, setMetaConnected }: UseMetaAuth
             if (response.data?.status === "success" || response.status === 200) {
                 toast.success("Meta Ads accounts connected successfully!");
                 setMetaConnected(true);
+
                 queryClient.invalidateQueries({ queryKey: ['onboardingStatus'] });
+                queryClient.invalidateQueries({ queryKey: ['integrations'] });
             } else {
                 toast.error("Failed to connect Meta Ads accounts.");
                 throw new Error("Failed response status");
@@ -131,7 +133,7 @@ export function useMetaAuth({ setConnectingMeta, setMetaConnected }: UseMetaAuth
             frontendBaseUrl = `http://${frontendBaseUrl}`;
         }
         
-        const redirectUri = location.pathname.includes('onboarding') ?`${frontendBaseUrl}/onboarding/ad-channels` : `${location.pathname}/integrations` ;
+        const redirectUri = location.pathname.includes('onboarding') ? `${frontendBaseUrl}/onboarding/ad-channels` : `${frontendBaseUrl}/setting/integration` ;
         
         
         window.location.href = `https://www.facebook.com/v21.0/dialog/oauth?app_id=${appId}&redirect_uri=${encodeURIComponent(redirectUri)}&config_id=${configId}&response_type=code&override_default_response_type=True`;

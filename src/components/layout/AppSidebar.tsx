@@ -2,7 +2,9 @@ import { Link, useLocation } from 'react-router-dom';
 import { TOP_NAV_ITEMS, BOTTOM_NAV_ITEMS, type TNavItem } from '@/constants/navigation';
 
 function NavItemLink({ item, currentPath }: { item: TNavItem; currentPath: string }) {
-  const isActive = currentPath.startsWith(item.href);
+  const isActive = item.href === '/settings' 
+    ? currentPath.startsWith('/setting') 
+    : currentPath.startsWith(item.href);
   const IconComponent = item.icon;
 
   return (

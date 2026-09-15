@@ -10,6 +10,9 @@ import { DashboardPage } from "@/features/dashboard/pages/DashboardPage";
 import { ReportingPage } from "@/features/reporting/pages/ReportingPage";
 import { CreativePage } from "@/features/creative/pages/CreativePage";
 import { SettingsPage } from "@/features/settings/pages/SettingsPage";
+import { BillingTab } from "@/features/settings/components/billing/BillingTab";
+import { IntegrationsTab } from "@/features/settings/components/integrations/IntegrationsTab";
+import { SubAccountsTab } from "@/features/settings/components/subaccounts/SubAccountsTab";
 import { 
     OnboardingPage,
     WelcomeRoute,
@@ -30,6 +33,16 @@ function CatchAll() {
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
     return <Navigate to={isAuthenticated ? "/integration" : "/login"} replace />;
 }
+
+const settingsRouteChildren = [
+    { index: true, element: <BillingTab /> },
+    { path: "billing", element: <BillingTab /> },
+    { path: "integration", element: <IntegrationsTab /> },
+    { path: "integrations", element: <IntegrationsTab /> },
+    { path: "sub-account", element: <SubAccountsTab /> },
+    { path: "sub-accounts", element: <SubAccountsTab /> },
+    { path: "subaccounts", element: <SubAccountsTab /> },
+];
 
 const router = createBrowserRouter([
     {
@@ -55,7 +68,16 @@ const router = createBrowserRouter([
                     { path: "/dashboard", element: <DashboardPage /> },
                     { path: "/reporting", element: <ReportingPage /> },
                     { path: "/creative", element: <CreativePage /> },
-                    { path: "/settings", element: <SettingsPage /> },
+                    { 
+                        path: "/settings", 
+                        element: <SettingsPage />,
+                        children: settingsRouteChildren,
+                    },
+                    { 
+                        path: "/setting", 
+                        element: <SettingsPage />,
+                        children: settingsRouteChildren,
+                    },
                     { 
                         path: "/onboarding", 
                         element: <OnboardingPage />,

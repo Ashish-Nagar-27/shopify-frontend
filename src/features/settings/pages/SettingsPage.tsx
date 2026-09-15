@@ -1,16 +1,19 @@
+import TopBar from "@/components/shared/Header";
+import { Outlet } from "react-router-dom";
+import { SettingsTabs } from "../components/SettingsTabs";
+
 export function SettingsPage() {
     return (
-        <div className="min-h-svh bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950">
-            <main className="mx-auto max-w-5xl px-6 py-4">
-                <div className="mb-10">
-                    <h1 className="text-3xl font-bold tracking-tight text-white">
-                        Settings
-                    </h1>
-                    <p className="mt-2 text-slate-400">
-                        Configure your application preferences and account settings.
-                    </p>
-                </div>
-            </main>
-        </div>
+        <>
+            <TopBar
+                showDatePicker={false}
+            />
+            <div className="min-h-svh bg-background text-foreground">
+                <SettingsTabs />
+                <main className="px-7 pt-6 pb-12 flex flex-col gap-[22px] max-w-[1180px] mx-auto">
+                    <Outlet />
+                </main>
+            </div>
+        </>
     );
 }

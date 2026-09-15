@@ -164,6 +164,13 @@
   --destructive: oklch(0.58 0.22 25);
   --destructive-foreground: oklch(0.985 0 0);
   --input: var(--border-soft);
+
+  /* Settings tokens */
+  --bg-page: oklch(0.1 0.018 240);
+  --text-on-accent: oklch(0.1 0.018 240);
+  --overlay: oklch(0.05 0.01 240 / 0.6);
+  --gradient-accent: linear-gradient(135deg, var(--cyan), var(--cyan-deep));
+  --gradient-avatar: linear-gradient(135deg, var(--magenta), var(--cyan));
 }
 
 /* =============================================

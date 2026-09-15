@@ -29,6 +29,7 @@ export default function TopBar({
 }: {
   showDatePicker?: boolean;
 }) {
+  
 
   const { pathname } = useLocation();
   const { user, logout } = useAuthStore();
@@ -39,7 +40,11 @@ export default function TopBar({
   todayRef.current.setHours(0, 0, 0, 0);
   const today = todayRef.current;
 
-  const pageData = NAV_ITEMS.find((item) => item.href === pathname)
+  const pageData = NAV_ITEMS.find((item) => 
+    item.href === pathname || 
+    (item.href !== "/" && pathname.startsWith(item.href)) ||
+    (item.href === "/settings" && pathname.startsWith("/setting"))
+  );
   const dateKey = pageData?.dateKey
  
   const currentDates = dateKey ? store[dateKey] : store['dashboardDates']

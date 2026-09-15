@@ -221,6 +221,18 @@ export const info = (p: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
+/**
+ * Check Icon (Checkmark)
+ * SVG: Clean checkmark path
+ * Used in Pages / Components:
+ *  - Settings Plan Card (PlanCard.tsx)
+ */
+export const check = (p: React.SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 24 24" width={15} height={15} fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" {...p}>
+    <path d="M20 6 9 17l-5-5" />
+  </svg>
+);
+
 
 // ============================================================================
 // CHEVRONS & DIRECTIONAL ARROW ICONS
@@ -446,3 +458,10 @@ export const InfoIcon = info;
 export const PlayGlyph = playGlyph;
 export const CarouselGlyph = carouselGlyph;
 export const StaticGlyph = staticGlyph;
+export const CheckIcon = check;
+export const DashboardIcon = grid;
+export const ReportingIcon = chart;
+export const AudiencesIcon = audience;
+export const ExploreIcon = search;
+export const FunnelsIcon = funnel;
+export const GearIcon = settings;
