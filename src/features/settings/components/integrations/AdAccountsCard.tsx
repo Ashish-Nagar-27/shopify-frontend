@@ -68,7 +68,7 @@ export function AdAccountsCard({ adAccounts, isLoading = false }: AdAccountsCard
     //     onError: (err) => showToast(err instanceof Error ? err.message : "Could not connect account", "error"),
     //   }
     // );
-    platform === "google" ? connectGoogleAds() : connectMetaAds();
+    platform === "google" ? connectGoogleAds("settings") : connectMetaAds();
   };
 
   // Normalize ad accounts list from API overview

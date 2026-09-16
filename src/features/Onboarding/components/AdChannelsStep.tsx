@@ -72,7 +72,7 @@ export function AdChannelsStep({
                             size="sm"
                             className="px-5 font-bold transition-opacity hover:opacity-90"
                             disabled={connectingGoogle}
-                            onClick={connectGoogleAds}
+                                onClick={() => connectGoogleAds("onboarding")}
                         >
                             {connectingGoogle ? <Loader2 className="w-4 h-4 animate-spin" /> : "Connect"}
                         </Button>

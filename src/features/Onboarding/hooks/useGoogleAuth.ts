@@ -71,10 +71,12 @@ export function useGoogleAuth({ setConnectingGoogle, setGoogleConnected }: UseGo
         }
     }, []);
 
-    const connectGoogleAds = () => {
+    const connectGoogleAds = (source: string) => {
+        if (!source) return;
         setConnectingGoogle(true);
+
         const baseUrl = (import.meta.env.VITE_REACT_APP_BASE_URL || "").trim().replace(/\/$/, "");
-        window.location.href = `${baseUrl}/google/authorize/null?source=onboarding/ad-channels`;
+        window.location.href = `${baseUrl}/setting/integrations/google/authorize?source=${source}`;
     };
 
     const closeModal = () => {

@@ -35,12 +35,12 @@ export const onboardingApi = {
 
     connectGoogleAdsAccounts: async (customerIdParam: string, refreshToken: string | null) => {
         const queryStr = `customerId=${encodeURIComponent(customerIdParam)}&refresh_token=${encodeURIComponent(refreshToken || "")}&systemid=null`;
-        const response = await api.post(`/google/clientaccount?${queryStr}`);
+        const response = await api.post(`/setting/integrations/google/clientaccount?${queryStr}`);
         return response;
     },
 
     connectMetaAdsAccounts: async (payload: { accessToken: string, expireon: string | null, accountinfo: { id: string, name: string }[] }) => {
-        const response = await api.post("/facebook/clientcredentials", payload);
+        const response = await api.post("/setting/integrations/facebook/clientcredentials", payload);
         return response;
     },
 
