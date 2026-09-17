@@ -16,7 +16,7 @@ export const billingApi = {
         return response.data;
     },
     changePlan: async (newPlanId: string, shopId: string): Promise<{ confirmationUrl: string }> => {
-        const response = await api.post<{ confirmationUrl: string }>("/api/billing/change-plan", { newPlanId, shopId });
+        const response = await api.post<{ confirmationUrl: string }>("/api/billing/change-plan", { new_plan_id: newPlanId, shopId });
         return response.data;
     },
     cancelSubscription: async (shopId: string): Promise<{ success: boolean }> => {

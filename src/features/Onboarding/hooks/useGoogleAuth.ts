@@ -3,6 +3,7 @@ import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { onboardingApi } from "../api/onboardingApi";
 import type { AccountOption } from "../components/SelectAccountsModal";
+import { settingsKeys } from "@/features/settings/api/queryKeys";
 
 export function extractCustomerIDsAndRefreshToken(url: string) {
     // Checking if the URL contains a query string
@@ -76,7 +77,7 @@ export function useGoogleAuth({ setConnectingGoogle, setGoogleConnected }: UseGo
         setConnectingGoogle(true);
 
         const baseUrl = (import.meta.env.VITE_REACT_APP_BASE_URL || "").trim().replace(/\/$/, "");
-        window.location.href = `${baseUrl}/setting/integrations/google/authorize?source=${source}`;
+        window.location.href = `${baseUrl}/setting/integrations/google/authorize/null?source=${source}`;
     };
 
     const closeModal = () => {
@@ -94,6 +95,7 @@ export function useGoogleAuth({ setConnectingGoogle, setGoogleConnected }: UseGo
                 toast.success("Google Ads accounts connected successfully!");
                 setGoogleConnected(true);
                 queryClient.invalidateQueries({ queryKey: ['onboardingStatus'] });
+                queryClient.invalidateQueries({ queryKey: settingsKeys.integrations() });
             } else {
                 toast.error("Failed to connect Google Ads accounts.");
                 throw new Error("Failed response status");

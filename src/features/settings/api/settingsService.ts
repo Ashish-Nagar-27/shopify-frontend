@@ -86,7 +86,7 @@ export async function switchPlan(planId: PlanId): Promise<CurrentPlanSummary> {
   //   mockState.currentPlanId = String(planId);
   //   return getMockCurrentPlanSummary();
   // }
-  const { data } = await api.post<CurrentPlanSummary>("/billing/change", { planId });
+  const { data } = await api.post<CurrentPlanSummary>("/api/billing/change-plan", { new_plan_id: planId });
   return data;
 }
 
@@ -213,7 +213,7 @@ export async function inviteMember(payload: InviteMemberPayload): Promise<TeamMe
 
 export async function updateMember(payload: UpdateMemberPayload): Promise<TeamMember> {
   
-  const { data } = await api.patch<TeamMember>(`/setting/team/members/${payload.id}`, payload);
+  const { data } = await api.patch<TeamMember>(`/setting/edit/team/members/${payload.id}`, payload);
   return data;
 }
 
