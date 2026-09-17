@@ -4,15 +4,47 @@ import { CheckIcon } from "../icons";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+
+export function PlanCardSkeleton({ className }: { className?: string } = {}) {
+  return (
+    <Card
+      className={`relative flex flex-col gap-0 rounded-xl border border-[var(--border-soft)] bg-[var(--surface)] p-5.5 text-inherit shadow-none ${
+        className ?? ""
+      }`}
+    >
+      <Skeleton className="mb-2 h-5 w-28 bg-[var(--surface-hi)]" />
+      <div className="mb-4 flex items-baseline gap-1.5">
+        <Skeleton className="h-8 w-20 bg-[var(--surface-hi)]" />
+        <Skeleton className="h-3.5 w-7 bg-[var(--surface-hi)]" />
+      </div>
+
+      <div className="mb-5 flex flex-1 flex-col gap-2.5">
+        {[0, 1, 2, 3].map((i) => (
+          <div key={i} className="flex items-center gap-2">
+            <Skeleton className="h-3.5 w-3.5 shrink-0 rounded-full bg-[var(--surface-hi)]" />
+            <Skeleton
+              className="h-3.5 bg-[var(--surface-hi)]"
+              style={{ width: `${65 + ((i * 11) % 25)}%` }}
+            />
+          </div>
+        ))}
+      </div>
+
+      <Skeleton className="h-[38px] w-full rounded-lg bg-[var(--surface-hi)]" />
+    </Card>
+  );
+}
 
 interface PlanCardProps {
-  plan: BillingPlanItem | Plan;
+  plan?: BillingPlanItem | Plan;
   /** Optional override; automatically inferred if using BillingPlanItem */
   isCurrent?: boolean;
   /** Optional override; automatically inferred if using BillingPlanItem */
   isUpgrade?: boolean;
-  onSelect: (planId: string) => void;
+  onSelect?: (planId: string) => void;
   isPending?: boolean;
+  isLoading?: boolean;
 }
 
 /**
@@ -25,7 +57,11 @@ export function PlanCard({
   isUpgrade: propIsUpgrade,
   onSelect,
   isPending,
+  isLoading,
 }: PlanCardProps) {
+  if (isLoading || !plan) {
+    return <PlanCardSkeleton />;
+  }
   // Normalize plan fields between API response (snake_case) and legacy types (camelCase)
   const isCurrent =
     "is_current_plan" in plan
@@ -83,7 +119,7 @@ export function PlanCard({
       <Button
         type="button"
         disabled={isCurrent || isPending}
-        onClick={() => onSelect(planId)}
+        onClick={() => onSelect?.(planId)}
         className={`h-[38px] rounded-lg text-[13px] font-semibold shadow-none transition-opacity disabled:cursor-default ${
           isCurrent
             ? "border border-[var(--border-soft)] bg-transparent text-[var(--fg-faint)] opacity-100 hover:bg-transparent hover:text-[var(--fg-faint)]"
@@ -97,3 +133,6 @@ export function PlanCard({
     </Card>
   );
 }
+
+PlanCard.Skeleton = PlanCardSkeleton;
+

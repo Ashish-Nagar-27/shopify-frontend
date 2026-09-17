@@ -4,7 +4,7 @@ import {
 } from "../../api/useSettingsQueries";
 import { CurrentPlanCard } from "./CurrentPlanCard";
 import { UsageCard } from "./UsageCard";
-import { PlanCard } from "./PlanCard";
+import { PlanCard, PlanCardSkeleton } from "./PlanCard";
 import { toast } from "sonner";
 
 /**
@@ -58,16 +58,18 @@ export function BillingTab() {
           Upgrade or switch plans anytime — changes apply at your next billing cycle.
         </div>
         <div className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]">
-          {(overview?.available_plans ?? []).map((plan) => (
-            <PlanCard
-              key={plan.plan_id}
-              plan={plan}
-              onSelect={handleSelectPlan}
-              isPending={
-                switchPlanMutation.isPending && switchPlanMutation.variables === plan.plan_id
-              }
-            />
-          ))}
+          {isLoading
+            ? [0, 1, 2].map((i) => <PlanCardSkeleton key={i} />)
+            : (overview?.available_plans ?? []).map((plan) => (
+                <PlanCard
+                  key={plan.plan_id}
+                  plan={plan}
+                  onSelect={handleSelectPlan}
+                  isPending={
+                    switchPlanMutation.isPending && switchPlanMutation.variables === plan.plan_id
+                  }
+                />
+              ))}
         </div>
       </div>
     </div>
