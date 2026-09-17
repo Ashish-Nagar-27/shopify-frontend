@@ -12,6 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { AdAccount, AdAccountsOverview, AdPlatform } from "../../types/settings.types";
 import { useGoogleAuth } from "@/features/Onboarding/hooks/useGoogleAuth";
 import { useMetaAuth } from "@/features/Onboarding/hooks/useMetaAuth";
+import { SelectAccountsModal } from "@/features/Onboarding/components/SelectAccountsModal";
 
 interface AdAccountsCardProps {
   /** Real overview data returned by GET /setting/integrations/list */
@@ -120,6 +121,7 @@ export function AdAccountsCard({ adAccounts, isLoading = false }: AdAccountsCard
     : `${totalConnected} of ${accountLimit} connected`;
 
   return (
+    <>
     <Card className="gap-0 rounded-xl border border-[var(--border-soft)] bg-[var(--surface)] py-0 text-inherit shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_20px_40px_-24px_rgba(0,0,0,0.6)]">
       <div className="flex items-center justify-between gap-4 border-b border-[var(--border-soft)] px-5.5 py-5">
         <div>
@@ -177,5 +179,21 @@ export function AdAccountsCard({ adAccounts, isLoading = false }: AdAccountsCard
         ))
       )}
     </Card>
+     <SelectAccountsModal
+                    isOpen={isGoogleModalOpen}
+                    onClose={closeGoogleModal}
+                    accounts={googleAccounts}
+                    channelName="Google Ads"
+                    onSubmit={handleGoogleAccountsSubmit}
+                />
+    
+                <SelectAccountsModal
+                    isOpen={isMetaModalOpen}
+                    onClose={closeMetaModal}
+                    accounts={metaAccounts}
+                    channelName="Meta Ads"
+                    onSubmit={handleMetaAccountsSubmit}
+                />
+    </>
   );
 }
