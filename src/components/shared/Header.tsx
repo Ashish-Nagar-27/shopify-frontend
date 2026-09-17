@@ -43,7 +43,7 @@ export default function TopBar({
   const pageData = NAV_ITEMS.find((item) => 
     item.href === pathname || 
     (item.href !== "/" && pathname.startsWith(item.href)) ||
-    (item.href === "/settings" && pathname.startsWith("/setting"))
+    (item.href === "/settings" && pathname.startsWith("/settings"))
   );
   const dateKey = pageData?.dateKey
  
@@ -83,7 +83,7 @@ export default function TopBar({
 
 
     //  refresh button 
-  const { refresPageData } = useApiDataRefresh()
+  const { refreshPageData } = useApiDataRefresh();
 
   return (
     <header className="flex items-center justify-between px-7 py-[18px] gap-6 border-b border-border-soft bg-[linear-gradient(180deg,oklch(0.16_0.02_235/0.9),oklch(0.16_0.02_235/0.4))] [backdrop-filter:blur(8px)] sticky top-0 z-[4]">
@@ -132,7 +132,7 @@ export default function TopBar({
         <button
           className={cn(ctrlBase, 'w-9 px-0', 'group')}
           title="Refresh"
-          onClick={() => refresPageData(pageData?.href)}
+          onClick={() => refreshPageData(pathname)}
         >
           <Icon.refresh
             width="16"

@@ -8,23 +8,24 @@ interface TabDef {
 
 const TABS: TabDef[] = [
   { id: "billing", label: "Billing & plan", path: "/settings" },
-  { id: "integrations", label: "Integrations", path: "/setting/integration" },
-  { id: "subaccounts", label: "Sub-accounts", path: "/setting/sub-account" },
+  { id: "integrations", label: "Integrations", path: "/settings/integrations" },
+  { id: "subaccounts", label: "Sub-accounts", path: "/settings/sub-accounts" },
 ];
 
 export function SettingsTabs() {
   const { pathname } = useLocation();
 
   const getActiveTab = () => {
-    if (pathname.includes("integration")) return "integrations";
-    if (pathname.includes("sub-account") || pathname.includes("subaccount")) return "subaccounts";
+    if (pathname.includes("integrations")) return "integrations";
+    if (pathname.includes("sub-accounts")) return "subaccounts";
     return "billing";
   };
 
   const activeTab = getActiveTab();
 
   return (
-    <div className="flex gap-1 border-b border-[var(--border-soft)] px-7">
+    // <div className="flex gap-1 border-b border-[var(--border-soft)] px-7 sticky top-18 z-50 bg-[var(--surface)]">
+    <div className="flex gap-1 border-b border-[var(--border-soft)] px-7 sticky top-18 z-50 bg-transparent [backdrop-filter:blur(8px)] ">
       {TABS.map((tab) => {
         const isActive = tab.id === activeTab;
         return (

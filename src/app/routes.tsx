@@ -37,11 +37,8 @@ function CatchAll() {
 const settingsRouteChildren = [
     { index: true, element: <BillingTab /> },
     { path: "billing", element: <BillingTab /> },
-    { path: "integration", element: <IntegrationsTab /> },
     { path: "integrations", element: <IntegrationsTab /> },
-    { path: "sub-account", element: <SubAccountsTab /> },
     { path: "sub-accounts", element: <SubAccountsTab /> },
-    { path: "subaccounts", element: <SubAccountsTab /> },
 ];
 
 const router = createBrowserRouter([
