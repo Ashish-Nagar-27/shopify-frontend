@@ -29,6 +29,11 @@ export interface CurrentPlanSummary {
   renewalDate?: string;
 }
 
+export interface ChangePlainTypes {
+  confirmationUrl: string;
+}
+
+
 export interface UsageMetric {
   used?: number;
   limit?: number;

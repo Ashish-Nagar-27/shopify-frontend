@@ -29,8 +29,11 @@ export function BillingTab() {
     const isUpgrade = targetPlan?.action_type === "upgrade";
 
     switchPlanMutation.mutate(planId, {
-      onSuccess: () =>
-        toast.success(`${isUpgrade ? "Upgraded to" : "Switched to"} ${planName}`),
+      onSuccess: (data) => {
+        console.log(data);
+        window.location.href = data.confirmationUrl
+      },
+      // toast.success(`${isUpgrade ? "Upgraded to" : "Switched to"} ${planName}`),
       onError: (err) =>
         toast.error(err instanceof Error ? err.message : "Could not switch plan"),
     });

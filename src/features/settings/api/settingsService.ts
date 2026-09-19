@@ -16,7 +16,7 @@ import type {
   TeamMember,
   TeamMembersResponse,
   UpdateMemberPayload,
-  UsageSummary,
+  UsageSummary, ChangePlainTypes
 } from "../types/settings.types";
 
 /**
@@ -80,13 +80,13 @@ export async function fetchUsageSummary(): Promise<UsageSummary> {
   };
 }
 
-export async function switchPlan(planId: PlanId): Promise<CurrentPlanSummary> {
-  // if (USE_MOCK_DATA) {
-  //   await simulateNetworkDelay(400);
-  //   mockState.currentPlanId = String(planId);
-  //   return getMockCurrentPlanSummary();
-  // }
-  const { data } = await api.post<CurrentPlanSummary>("/api/billing/change-plan", { new_plan_id: planId });
+export async function switchPlan(planId: PlanId): Promise<ChangePlainTypes> {
+  const { data } = await api.post<ChangePlainTypes>("/api/billing/change-plan", { new_plan_id: planId });
+  return data;
+}
+
+export async function cancelPlan(): Promise<unknown> {
+  const { data } = await api.post("/api/billing/canceldd");
   return data;
 }
 
@@ -126,24 +126,7 @@ export function extractAdAccountsFromOverview(overview?: IntegrationsOverviewRes
 }
 
 export async function connectAdAccount(payload: ConnectAdAccountPayload): Promise<AdAccount> {
-  // if (USE_MOCK_DATA) {
-  //   await simulateNetworkDelay(400);
-  //   const label = payload.platform === "google" ? "Google Ads" : "Meta Ads";
-  //   const account: AdAccount = {
-  //     id: Date.now(),
-  //     platform: payload.platform,
-  //     name: `${label} Account`,
-  //     accountId:
-  //       payload.platform === "google"
-  //         ? `${400 + Math.floor(Math.random() * 90)}-${100 + Math.floor(Math.random() * 900)}-${
-  //             1000 + Math.floor(Math.random() * 9000)
-  //           }`
-  //         : `act_${Math.floor(1_000_000_000 + Math.random() * 8_999_999_999)}`,
-  //     status: "active",
-  //   };
-  //   mockState.adAccounts.push(account);
-  //   return account;
-  // }
+
   const { data } = await api.post<AdAccount>("/setting/integrations/facebook/add", payload);
   return data;
 }
@@ -169,6 +152,12 @@ export async function connectShopify(): Promise<ShopifyIntegration> {
   const { data } = await api.post<ShopifyIntegration>("/settings/integrations/shopify/connect");
   return data;
 }
+// connectShopify: async (shop: string, source?: string): Promise<{ url: string }> => {
+//   if (!source) source = 'integration'
+//   const response = await api.post<{ url: string }>("/api/shopify/connect", { shop, source });
+//   // const response = await api.post<{ url: string }>("/shopifyintegration", { shop });
+//   return response.data;
+// },
 
 export async function disconnectShopify(): Promise<ShopifyIntegration> {
   if (USE_MOCK_DATA) {
@@ -183,41 +172,20 @@ export async function disconnectShopify(): Promise<ShopifyIntegration> {
 // ---------- Team members / sub-accounts ----------
 
 export async function fetchTeamMembers(): Promise<TeamMembersResponse> {
-  // if (USE_MOCK_DATA) {
-  //   await simulateNetworkDelay();
-  //   return { team_members: mockState.members.map((m) => ({
-  //     joined_at: "01 Jan 2026",
-  //     last_active_at: "01 Jan 2026",
-  //     member_email: m.email,
-  //     member_id: Number(m.id),
-  //     member_name: m.name,
-  //     member_role: m.role.toLowerCase(),
-  //     member_status: "active",
-  //     was_role_changed: false,
-  //   })), total_members: mockState.members.length };
-  // }
   const { data } = await api.get<TeamMembersResponse>("/setting/team/members");
   return data;
 }
 
 export async function inviteMember(payload: InviteMemberPayload): Promise<TeamMember> {
-  // if (USE_MOCK_DATA) {
-  //   await simulateNetworkDelay(400);
-  //   const member: TeamMember = { id: Date.now(), ...payload };
-  //   mockState.members.push(member);
-  //   return member;
-  // }
   const { data } = await api.post<TeamMember>("/setting/team/invite", payload);
   return data;
 }
 
 export async function updateMember(payload: UpdateMemberPayload): Promise<TeamMember> {
-  
   const { data } = await api.patch<TeamMember>(`/setting/edit/team/members/${payload.id}`, payload);
   return data;
 }
 
 export async function removeMember(id: TeamMember["id"]): Promise<void> {
-
   return await api.delete(`/setting/team/members/${id}`);
 }
