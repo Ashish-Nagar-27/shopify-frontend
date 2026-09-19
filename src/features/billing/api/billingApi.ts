@@ -20,7 +20,7 @@ export const billingApi = {
         return response.data;
     },
     cancelSubscription: async (shopId: string): Promise<{ success: boolean }> => {
-        const response = await api.post<{ success: boolean }>("/api/billing/cancel", { shopId });
+        const response = await api.post<{ success: boolean }>("/api/billing/canceldd", { shopId });
         return response.data;
     }
 };

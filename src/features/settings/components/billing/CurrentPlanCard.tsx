@@ -2,6 +2,19 @@ import { ProgressBar } from "../common/ProgressBar";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useCancelPlanMutation } from "../../api/useSettingsQueries";
+import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import type {
   CurrentPlanDetail,
   CurrentPlanSummary,
@@ -55,6 +68,16 @@ export function CurrentPlanCard({ plan, sessions, isLoading }: CurrentPlanCardPr
       ? Math.max(0, limit - used)
       : undefined;
 
+  const cancelPlanMutation = useCancelPlanMutation();
+
+  const handleCancelPlan = () => {
+    cancelPlanMutation.mutate(undefined, {
+      onSuccess: () => toast.success("Plan cancelled successfully"),
+      onError: (err) =>
+        toast.error(err instanceof Error ? err.message : "Could not cancel plan"),
+    });
+  };
+
   return (
     <Card className="gap-4.5 rounded-xl border border-[var(--border-soft)] bg-[var(--surface)] p-5.5 text-inherit shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_20px_40px_-24px_rgba(0,0,0,0.6)]">
       <div>
@@ -98,13 +121,44 @@ export function CurrentPlanCard({ plan, sessions, isLoading }: CurrentPlanCardPr
           </div>
         ) : null}
       </div>
+      <div className="flex justify-between">
 
-      <a
-        href="#plans"
-        className="mt-auto text-[13px] text-[var(--cyan)] hover:underline"
-      >
-        See all plans below ↓
-      </a>
+        <a
+          href="#plans"
+          className="mt-auto text-[13px] text-[var(--cyan)] hover:underline"
+        >
+          See all plans below ↓
+        </a>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <button
+              disabled={cancelPlanMutation.isPending}
+              type="button"
+              className="h-8 shrink-0 whitespace-nowrap px-[14px] rounded-lg border border-[oklch(0.24_0.022_235)] bg-transparent text-[oklch(0.72_0.02_235)] text-xs font-medium font-inherit cursor-pointer hover:border-[oklch(0.7_0.2_25_/_0.5)] hover:text-[oklch(0.7_0.2_25)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {cancelPlanMutation.isPending ? "Cancelling..." : "Cancel plan"}
+            </button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Cancel Plan</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to cancel your subscription? Your plan will not get renewed anymore.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Keep Plan</AlertDialogCancel>
+              <AlertDialogAction
+                variant="destructive"
+                onClick={handleCancelPlan}
+              >
+                Confirm Cancellation
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+      </div>
     </Card>
   );
 }

@@ -75,6 +75,18 @@ export function useSwitchPlanMutation() {
   });
 }
 
+export function useCancelPlanMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => settingsService.cancelPlan(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: settingsKeys.billingOverview() });
+      queryClient.invalidateQueries({ queryKey: settingsKeys.currentPlan() });
+      queryClient.invalidateQueries({ queryKey: settingsKeys.usage() });
+    },
+  });
+}
+
 export function useConnectAdAccountMutation() {
   const queryClient = useQueryClient();
   return useMutation({

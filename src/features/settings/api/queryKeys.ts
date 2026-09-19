@@ -6,4 +6,5 @@ export const settingsKeys = {
   usage: () => [...settingsKeys.all, "usage"] as const,
   integrations: () => [...settingsKeys.all, "integrations"] as const,
   teamMembers: () => [...settingsKeys.all, "team-members"] as const,
+  cancelPlan: () => [...settingsKeys.all, "cancel-plan"] as const,
 };
