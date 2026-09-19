@@ -24,8 +24,20 @@ export function SettingsTabs() {
   const activeTab = getActiveTab();
 
   return (
-    // <div className="flex gap-1 border-b border-[var(--border-soft)] px-7 sticky top-18 z-50 bg-[var(--surface)]">
-    <div className="flex gap-1 border-b border-[var(--border-soft)] px-7 sticky top-18 z-50 bg-transparent [backdrop-filter:blur(8px)] ">
+    <div
+      className="
+    flex
+    gap-1
+    px-7
+    border-b
+    border-[oklch(0.24_0.022_235)]
+    bg-[linear-gradient(oklch(0.16_0.02_235_/_0.4),oklch(0.16_0.02_235_/_0.82))]
+    sticky
+    top-18
+    z-[4]
+    backdrop-blur-[8px]
+  "
+    >
       {TABS.map((tab) => {
         const isActive = tab.id === activeTab;
         return (
