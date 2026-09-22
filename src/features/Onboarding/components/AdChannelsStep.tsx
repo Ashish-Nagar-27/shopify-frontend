@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { GoogleIcon, MetaIcon, CheckIcon } from "./icons";
 import type { UseOnboardingReturn } from "../types/onboarding.types";
-import { useGoogleAuth } from "../hooks/useGoogleAuth";
-import { useMetaAuth } from "../hooks/useMetaAuth";
-import { SelectAccountsModal } from "./SelectAccountsModal";
+import { SelectAccountsModal } from "@/components/shared/SelectAccountsModal";
+import { useGoogleAdsIntegration } from "@/hooks/useGoogleAdsIntegration";
+import { useMetaAdsIntegration } from "@/hooks/useMetaAdsIntegration";
 
 export interface AdChannelsStepProps {
     googleConnected: boolean;
@@ -36,7 +36,7 @@ export function AdChannelsStep({
         isModalOpen: isGoogleModalOpen, 
         closeModal: closeGoogleModal,
         handleAccountsSubmit: handleGoogleAccountsSubmit
-    } = useGoogleAuth({ setConnectingGoogle, setGoogleConnected });
+    } = useGoogleAdsIntegration({ setConnectingGoogle, setGoogleConnected });
 
     const { 
         connectMetaAds,
@@ -44,7 +44,8 @@ export function AdChannelsStep({
         isModalOpen: isMetaModalOpen,
         closeModal: closeMetaModal,
         handleAccountsSubmit: handleMetaAccountsSubmit
-    } = useMetaAuth({ setConnectingMeta, setMetaConnected });
+    } = useMetaAdsIntegration({ setConnectingMeta, setMetaConnected });
+    
 
     return (
         <div className="flex flex-col gap-4">

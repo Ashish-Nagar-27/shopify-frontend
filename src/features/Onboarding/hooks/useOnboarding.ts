@@ -4,7 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 
 import { onboardingApi } from "../api/onboardingApi";
 import { integrationApi } from "@/features/integration/api/integrationApi";
-import type { UseOnboardingReturn, OnboardingStatusResponse } from "../types/onboarding.types";
+import { useShopifyIntegration } from "@/hooks/useShopifyIntegration";
+import type { UseOnboardingReturn } from "../types/onboarding.types";
 
 const STEP_ROUTES: Record<string, string> = {
     welcome: "/onboarding/welcome",
@@ -51,13 +52,24 @@ export function useOnboarding(): UseOnboardingReturn {
     });
 
     const [animating, setAnimating] = useState(false);
-    const [shopDomain, setShopDomain] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
     const [billingPlan, setBillingPlan] = useState<string | null>(null);
     const [utmApplied, setUtmApplied] = useState<Record<string, boolean>>({
         google: false,
         meta: false,
+    });
+
+    const {
+        shopDomain,
+        setShopDomain,
+        isLoading,
+        setIsLoading,
+        error,
+        setError,
+        handleConnectShopify,
+        handleEnableTracking,
+    } = useShopifyIntegration({
+        defaultShopDomain: status?.steps?.shopify?.shop_domain,
+        source: "onboarding",
     });
     
     // Legacy simulated states
@@ -136,35 +148,6 @@ export function useOnboarding(): UseOnboardingReturn {
         }, 1600);
     };
 
-    async function handleConnectShopify() {
-        let shop = shopDomain.trim();
-        if (!shop.trim() && !status?.steps.shopify?.shop_domain) {
-            console.log('domain ',status?.steps.shopify?.shop_domain)
-            setError("Please enter your Shopify store domain");
-            return;
-        }
-        if (!shopDomain.trim() && status?.steps.shopify?.shop_domain) {
-            shop = status?.steps.shopify?.shop_domain
-        }
-
-        setIsLoading(true);
-        setError(null);
-
-        try {
-            const data = await onboardingApi.connectShopify(shop, "onboarding");
-            if (data.url) {
-                window.location.href = data.url;
-            } else {
-                alert("Connection initiated (Mock response)");
-            }
-        } catch (err) {
-            console.error("Failed to connect shopify:", err);
-            setError("Failed to initiate connection. Please try again.");
-        } finally {
-            setIsLoading(false);
-        }
-    }
-
     const transitionWithAnimation = async (action: () => Promise<void>) => {
         if (animating) return;
         setAnimating(true);
@@ -181,70 +164,6 @@ export function useOnboarding(): UseOnboardingReturn {
     async function handleFinishWelcome() {
         await transitionWithAnimation(() => onboardingApi.finishWelcome());
     }
-
-    // async function handleEnableTracking() {
-    //     setIsLoading(true);
-    //     setError(null);
-          
-    //     const CLIENT_ID = import.meta.env.VITE_SHOPIFY_CLIENT_ID; 
-    //     const EMBED_HANDLE = import.meta.env.VITE_SHOPIFY_EMBED_HANDLE;
-    //     const shopDomainVal = status?.steps?.shopify?.shop_domain 
-    //     const shopHandle = shopDomainVal ? shopDomainVal.replace(/\.myshopify\.com$/, "") : undefined;
-
-    //     if(!shopDomainVal){
-    //         alert("Please connect your Shopify store first.");
-    //         return;
-    //     }
-    //       console.log('shopDomainVal ', shopDomainVal)
-    //       console.log('embed ', EMBED_HANDLE)
-    //     try {
-    //         // const url = `https://admin.shopify.com/store/${shopHandle}/themes/current/editor?context=apps&appEmbed=${encodeURIComponent(
-    //         //     `${CLIENT_ID}%2F${EMBED_HANDLE}`
-    //         // )}`;
-    //               const url = `https://admin.shopify.com/store/${shopHandle}/themes/current/editor?context=apps&appEmbed=${encodeURIComponent(
-    //         `${CLIENT_ID}/${EMBED_HANDLE}`
-    //     )}`;
-
-    //         console.log(url);
-    //         window.open(url, "_blank");
-    //     } catch (err) {
-    //         console.error("Failed to open theme editor:", err);
-    //         setError("Failed to open theme editor. Please try again.");
-    //     } finally {
-    //         setIsLoading(false);
-    //     }
-    // }
-
-    async function handleEnableTracking() {
-    setIsLoading(true);
-    setError(null);
-
-    const CLIENT_ID = import.meta.env.VITE_SHOPIFY_CLIENT_ID;
-    const EMBED_HANDLE = import.meta.env.VITE_SHOPIFY_EMBED_HANDLE;
-    const shopDomainVal = status?.steps?.shopify?.shop_domain;
-    const shopHandle = shopDomainVal ? shopDomainVal.replace(/\.myshopify\.com$/, "") : undefined;
-
-    if (!shopDomainVal) {
-        alert("Please connect your Shopify store first.");
-        setIsLoading(false);
-        return;
-    }
-
-    try {
-        const url = `https://admin.shopify.com/store/${shopHandle}/themes/current/editor?context=apps&appEmbed=${encodeURIComponent(
-            `${CLIENT_ID}/${EMBED_HANDLE}`
-        )}`;
-
-        console.log(url);
-        // window.location.href = url
-        window.open(url, "_blank")
-    } catch (err) {
-        console.error("Failed to open theme editor:", err);
-        setError("Failed to open theme editor. Please try again.");
-    } finally {
-        setIsLoading(false);
-    }
-}
 
     async function handleExtensionVerified() {
         setIsLoading(true);
