@@ -46,10 +46,12 @@ export function LoginPage() {
         try {
              await login(data);
              const user = useAuthStore.getState().user
+          
            
-            if(user?.onboarding_status === "completed"){
+            if (user?.onboarding_status === "completed" || (user?.role === 'read_only' || user?.role === 'admin')){
                 navigate("/reporting", { replace: true });
-            }else{
+            } 
+            else{
                 navigate("/onboarding", { replace: true });
             }
             toast.success("Login Successfull");

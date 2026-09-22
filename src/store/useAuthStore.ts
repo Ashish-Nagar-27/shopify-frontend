@@ -33,6 +33,8 @@ export const useAuthStore = create<AuthState>()(
                             is_admin: data.is_admin,
                             isleadgen: data.isleadgen,
                             onboarding_status: data.onboarding_status,
+                            role: data.role,
+                            subaccountid: data.subaccountid
                         },
                         tokens: data.tokens,
                         isAuthenticated: true,
