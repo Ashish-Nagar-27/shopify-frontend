@@ -1,7 +1,7 @@
 import {
   useBillingOverviewQuery,
   useSwitchPlanMutation,
-} from "../../api/useSettingsQueries";
+} from "../../hooks";
 import { CurrentPlanCard } from "./CurrentPlanCard";
 import { UsageCard } from "./UsageCard";
 import { PlanCard, PlanCardSkeleton } from "./PlanCard";

@@ -8,7 +8,7 @@ import type {
 } from "../types/settings.types";
 
 /**
- * In-memory mock store. Mutated by services/settingsService.ts while
+ * In-memory mock store. Mutated by api/ while
  * VITE_USE_MOCK is on, so the UI behaves like a real backend during
  * development (optimistic-looking reads after writes) without needing a
  * server. Swap the service functions to real axios calls later — the

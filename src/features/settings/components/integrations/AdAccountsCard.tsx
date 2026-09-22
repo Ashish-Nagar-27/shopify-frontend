@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import {
   useConnectAdAccountMutation,
   useRemoveAdAccountMutation,
-} from "../../api/useSettingsQueries";
+} from "../../hooks";
 import { toast } from "sonner";
 import { AdAccountRow } from "./AdAccountRow";
 import { ConnectAccountPicker } from "./ConnectAccountPicker";
@@ -10,9 +10,9 @@ import { Card, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { AdAccount, AdAccountsOverview, AdPlatform } from "../../types/settings.types";
-import { useGoogleAuth } from "@/features/Onboarding/hooks/useGoogleAuth";
-import { useMetaAuth } from "@/features/Onboarding/hooks/useMetaAuth";
-import { SelectAccountsModal } from "@/features/Onboarding/components/SelectAccountsModal";
+import { SelectAccountsModal } from "@/components/shared/SelectAccountsModal";
+import { useMetaAdsIntegration } from "@/hooks/useMetaAdsIntegration";
+import { useGoogleAdsIntegration } from "@/hooks/useGoogleAdsIntegration";
 
 interface AdAccountsCardProps {
   /** Real overview data returned by GET /setting/integrations/list */
@@ -28,15 +28,8 @@ export function AdAccountsCard({ adAccounts, isLoading = false }: AdAccountsCard
   const removeMutation = useRemoveAdAccountMutation();
   const [showPicker, setShowPicker] = useState(false);
 
-  // -------------------------------
-  // -------------------------------
 
-  const [googleAccountsConnected, setGoogleAccountsConnected] = useState(false);
-  const [metaAccountsConnected, setMetaAccountsConnected] = useState(false);
-  const [googleAccountsConnecting, setGoogleAccountsConnecting] = useState(false);
-  const [metaAccountsConnecting, setMetaAccountsConnecting] = useState(false);
-
-
+ 
 
   const {
     connectGoogleAds,
@@ -44,31 +37,22 @@ export function AdAccountsCard({ adAccounts, isLoading = false }: AdAccountsCard
     isModalOpen: isGoogleModalOpen,
     closeModal: closeGoogleModal,
     handleAccountsSubmit: handleGoogleAccountsSubmit
-  } = useGoogleAuth({ setConnectingGoogle: setGoogleAccountsConnecting, setGoogleConnected: setGoogleAccountsConnected });
+  } = useGoogleAdsIntegration({ });
 
-  const {
+  
+  const {   
     connectMetaAds,
     extractedAccounts: metaAccounts,
     isModalOpen: isMetaModalOpen,
     closeModal: closeMetaModal,
     handleAccountsSubmit: handleMetaAccountsSubmit
-  } = useMetaAuth({ setConnectingMeta: setMetaAccountsConnecting, setMetaConnected: setMetaAccountsConnected });
+  } = useMetaAdsIntegration({});
 
 
-  // -------------------------------
-  // -------------------------------
+  
 
   const handleConnect = (platform: AdPlatform) => {
-    // connectMutation.mutate(
-    //   { platform },
-    //   {
-    //     onSuccess: () => {
-    //       setShowPicker(false);
-    //       showToast(`${platform === "google" ? "Google Ads" : "Meta Ads"} connected`, "success");
-    //     },
-    //     onError: (err) => showToast(err instanceof Error ? err.message : "Could not connect account", "error"),
-    //   }
-    // );
+
     platform === "google" ? connectGoogleAds("settings") : connectMetaAds();
   };
 

@@ -5,12 +5,13 @@ import { ConfirmInline } from "../common/ConfirmInline";
 import {
   useConnectShopifyMutation,
   useDisconnectShopifyMutation,
-} from "../../api/useSettingsQueries";
+} from "../../hooks";
 import { Card, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { ShopifyStoreOverview } from "../../types/settings.types";
 import { toast } from "sonner";
+import useShopifyIntegration from "@/hooks/useShopifyIntegration";
 
 interface ShopifyCardProps {
   /** Real store integration overview returned by GET /setting/integrations/list */
@@ -29,6 +30,8 @@ export function ShopifyCard({ shopifyStore, isLoading = false }: ShopifyCardProp
   const displayDomain = rawDomain ? rawDomain.replace(/^https?:\/\//, "") : "—";
   const connectedDate = shopifyStore?.connected_at;
   const planLabel = "Shopify";
+
+  const { handleConnectShopify } = useShopifyIntegration();
 
   const handleConnect = () => {
     connectMutation.mutate(undefined, {
@@ -107,7 +110,7 @@ export function ShopifyCard({ shopifyStore, isLoading = false }: ShopifyCardProp
           <div className="text-[13px] text-[var(--fg-dim)]">Not connected.</div>
           <Button
             type="button"
-            onClick={handleConnect}
+            onClick={() => handleConnectShopify("settings")}
             disabled={connectMutation.isPending}
             className="h-9 rounded-lg bg-[image:var(--gradient-accent)] px-4 text-[13px] font-semibold text-[var(--text-on-accent)] shadow-none hover:opacity-90 disabled:opacity-60"
           >

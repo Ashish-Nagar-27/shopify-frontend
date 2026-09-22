@@ -1,4 +1,4 @@
-import { useIntegrationsQuery } from "../../api/useSettingsQueries";
+import { useIntegrationsQuery } from "../../hooks";
 import { AdAccountsCard } from "./AdAccountsCard";
 import { ShopifyCard } from "./ShopifyCard";
 

@@ -2,7 +2,7 @@ import { ProgressBar } from "../common/ProgressBar";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useCancelPlanMutation } from "../../api/useSettingsQueries";
+import { useCancelPlanMutation } from "../../hooks";
 import { toast } from "sonner";
 import {
   AlertDialog,

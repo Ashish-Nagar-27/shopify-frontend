@@ -6,7 +6,7 @@ import {
   useRemoveMemberMutation,
   useTeamMembersQuery,
   useUpdateMemberMutation,
-} from "../../api/useSettingsQueries";
+} from "../../hooks";
 import type { MemberRole, TeamMember, TeamMemberApiItem } from "../../types/settings.types";
 import { toast } from "sonner";
 import { Card, CardTitle, CardDescription } from "@/components/ui/card";
