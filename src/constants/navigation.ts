@@ -15,7 +15,7 @@ export type TNavItem = {
     href: string;
     headerTitle: string;
     dateKey: StoreKeys;
-    position?: 'top' | 'bottom';
+    position?: 'top' | 'bottom' | "noPosition";
 }
 
 
@@ -31,12 +31,12 @@ export const NAV_ITEMS: TNavItem[] = [
         position: "top",
     },
     {
-        key: "report",
+        key: "performance",
         icon: chart,
-        label: "Reporting",
-        href: "/reporting",
+        label: "Performance",
+        href: "/performance",
         headerTitle: "Performance",
-        dateKey: "reportingDates",
+        dateKey: "performanceDates",
         position: "top",
     },
     {
@@ -57,8 +57,17 @@ export const NAV_ITEMS: TNavItem[] = [
         dateKey: "settingDates",
         position: "bottom",
     },
+    {
+        key: "profile",
+        icon: settings,
+        label: "Profile",
+        href: "/profile",
+        headerTitle: "Profile",
+        dateKey: "settingDates",
+        position: "noPosition",
+    },
 
 ];
 
-export const TOP_NAV_ITEMS = NAV_ITEMS.filter((item) => item.position !== 'bottom');
+export const TOP_NAV_ITEMS = NAV_ITEMS.filter((item) => item.position !== 'bottom' && item.position !== 'noPosition');
 export const BOTTOM_NAV_ITEMS = NAV_ITEMS.filter((item) => item.position === 'bottom');

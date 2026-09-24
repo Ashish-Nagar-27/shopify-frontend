@@ -9,6 +9,7 @@ import { PricingPage } from "@/features/billing/pages/PricingPage";
 import { DashboardPage } from "@/features/dashboard/pages/DashboardPage";
 import { ReportingPage } from "@/features/reporting/pages/ReportingPage";
 import { CreativePage } from "@/features/creative/pages/CreativePage";
+import { ProfilePage } from "@/features/profile/pages/profile";
 import { SettingsPage } from "@/features/settings/pages/SettingsPage";
 import { BillingTab } from "@/features/settings/components/billing/BillingTab";
 import { IntegrationsTab } from "@/features/settings/components/integrations/IntegrationsTab";
@@ -31,7 +32,7 @@ import EmailVerify from "@/features/auth/pages/EmailVerify";
 
 function CatchAll() {
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-    return <Navigate to={isAuthenticated ? "/integration" : "/login"} replace />;
+    return <Navigate to={isAuthenticated ? "/performance" : "/login"} replace />;
 }
 
 const settingsRouteChildren = [
@@ -59,22 +60,22 @@ const router = createBrowserRouter([
             {
                 element: <MainLayout />,
                 children: [
-                    { path: "/", element: <Navigate to="/integration" replace /> },
-                    { path: "/integration", element: <IntegrationPage /> },
+                    { path: "/", element: <Navigate to="/performance" replace /> },
+                    // { path: "/integration", element: <IntegrationPage /> },
                     { path: "/pricing", element: <PricingPage /> },
                     { path: "/dashboard", element: <DashboardPage /> },
-                    { path: "/reporting", element: <ReportingPage /> },
+                    { path: "/performance", element: <ReportingPage /> },
                     { path: "/creative", element: <CreativePage /> },
+                    {
+                        path: "/profile",
+                        element: <ProfilePage />,
+                    },
                     { 
                         path: "/settings", 
                         element: <SettingsPage />,
                         children: settingsRouteChildren,
                     },
-                    { 
-                        path: "/setting", 
-                        element: <SettingsPage />,
-                        children: settingsRouteChildren,
-                    },
+
                     { 
                         path: "/onboarding", 
                         element: <OnboardingPage />,

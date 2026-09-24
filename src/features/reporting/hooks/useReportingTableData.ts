@@ -14,9 +14,9 @@ export interface ReportingTableParams {
 
 // fetching main reporting table data
 export const useReportingTableData = () => {
-    const { reportingDates } = useDateStore();
+    const { performanceDates } = useDateStore();
     const { filter, traffic: storeTraffic } = useReportingStore();
-    const [startDate, endDate] = reportingDates;
+    const [startDate, endDate] = performanceDates;
 
     const attribute = filter?.model || "last";
     const traffic =  storeTraffic || "Facebook";
@@ -55,9 +55,9 @@ export interface TableSaleDataParams {
 
 // fetching sales popup table data
 export const useReportingTableSaleData = (params: TableSaleDataParams, enabled = false) => {
-    const { reportingDates } = useDateStore();
+    const { performanceDates } = useDateStore();
     const { filter, traffic: storeTraffic } = useReportingStore();
-    const [startDate, endDate] = reportingDates;
+    const [startDate, endDate] = performanceDates;
 
     const adid = params.adid;
     const channel = params.channel || storeTraffic || "Facebook";

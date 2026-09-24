@@ -4,11 +4,12 @@ import { persist } from 'zustand/middleware';
 
 export type DateRange = [string | undefined, string | undefined];
 
-export type StoreKeys = "dashboardDates" | "reportingDates" | "creativeDates" | "settingDates";
+export type StoreKeys = "dashboardDates" | "performanceDates" | "creativeDates" | "settingDates";
 
 interface DateState {
     dashboardDates: DateRange;
-    reportingDates: DateRange;
+    reportingDates: DateRange; 
+    performanceDates: DateRange; 
     creativeDates: DateRange;
     settingDates: DateRange;
 
@@ -29,6 +30,7 @@ export const useDateStore = create<DateState>()(
             reportingDates: getDefaults(),
             creativeDates: getDefaults(),
             settingDates: getDefaults(),
+            performanceDates: getDefaults(),
 
             setDateRange: (key, range) =>
                 set((state) => ({
@@ -43,6 +45,7 @@ export const useDateStore = create<DateState>()(
                 reportingDates: state.reportingDates,
                 creativeDates: state.creativeDates,
                 settingDates: state.settingDates,
+                performance: state.performanceDates,
             }),
         }
     )

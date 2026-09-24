@@ -5,9 +5,9 @@ import { useQuery } from "@tanstack/react-query";
 
 const useGraphSalesMetrics = () => {
 
-    const { reportingDates } = useDateStore();
+    const { performanceDates } = useDateStore();
 
-    const [startDate, endDate] = reportingDates;
+    const [startDate, endDate] = performanceDates;
 
     const { data: graphData, isLoading: graphDataLoading, error: graphDataError } = useQuery({
         queryKey: reportingKeys.graphSalesMetrics({ startDate, endDate }),

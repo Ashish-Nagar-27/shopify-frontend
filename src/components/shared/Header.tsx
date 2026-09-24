@@ -12,7 +12,7 @@ import {
 
 
 import { useState, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { MONTHS, fmtDate, cn } from '@/lib/utils';
 import type { DateRange } from './CalendarPopover';
 import * as Icon from '@/components/icons';
@@ -32,6 +32,7 @@ export default function TopBar({
   
 
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const { user, logout } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
   const store = useDateStore();
@@ -73,13 +74,8 @@ export default function TopBar({
     : `${fmtDate(range.start)} — ${fmtDate(range.end)}`;
 
   // User initials for the avatar
-  const userName = user?.adminid ? user.adminid.split('@')[0] : "User";
-  const initials = userName
-    .split(/[._-]/)
-    .map((n: string) => n[0])
-    .join("")
-    .toUpperCase()
-    .slice(0, 2);
+  // const userName = user?.adminid ? user.adminid.split('@')[0] : "User";
+
 
 
     //  refresh button 
@@ -88,7 +84,9 @@ export default function TopBar({
   return (
     <header className="flex items-center justify-between px-7 py-[18px] gap-6 border-b border-border-soft bg-[linear-gradient(180deg,oklch(0.16_0.02_235/0.9),oklch(0.16_0.02_235/0.4))] [backdrop-filter:blur(8px)] sticky top-0 z-[4]">
       <div className="flex items-center gap-[14px]">
-        <h1 className="text-[22px] font-semibold tracking-[-0.01em] m-0">{pageData?.headerTitle}</h1>
+        <h1 className="text-[22px] font-semibold tracking-[-0.01em] m-0">
+          {pageData?.headerTitle }
+        </h1>
 
 
         {/* profile dropdown section */}
@@ -157,14 +155,15 @@ export default function TopBar({
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">
-                  {userName}
+                <p
+                  className="text-sm font-medium leading-none cursor-pointer hover:text-fg transition-colors"
+                  onClick={() => {
+                    navigate("/profile");
+                    setIsOpen(false);
+                  }}
+                >
+                  Profile
                 </p>
-                {user?.adminid && (
-                  <p className="text-xs leading-none text-muted-foreground">
-                    {user.adminid}
-                  </p>
-                )}
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
