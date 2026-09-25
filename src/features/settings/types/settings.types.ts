@@ -199,7 +199,7 @@ export interface TeamMembersResponse {
   total_members: number;
 }
 
-export type MemberRole = "admin" | "read_only" | (string & {});
+export type MemberRole = "admin" | "readonly" | (string & {});
 
 export interface TeamMember {
   id: string | number;

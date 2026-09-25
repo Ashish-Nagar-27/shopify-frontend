@@ -5,7 +5,7 @@ export interface User {
     isleadgen: boolean;
     onboarding_status: string;
     isConnected?: boolean;
-    role?: "read_only" | "admin";
+    role?: "readonly" | "admin";
     subaccountid?: number | string;
 }
 
@@ -29,7 +29,7 @@ export interface LoginResponse {
     onboarding_status: string;
     tokens: AuthTokens;
     user_id: string;
-    role?: "read_only" | "admin" ;
+    role?: "readonly" | "admin" ;
     subaccountid?: number|string;   
 }
 

@@ -48,7 +48,7 @@ export function LoginPage() {
              const user = useAuthStore.getState().user
           
            
-            if (user?.onboarding_status === "completed" || (user?.role === 'read_only' || user?.role === 'admin')){
+            if (user?.onboarding_status === "completed" || (user?.role === 'readonly' || user?.role === 'admin')){
                 navigate("/reporting", { replace: true });
             } 
             else{
