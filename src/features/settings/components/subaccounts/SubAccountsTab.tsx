@@ -27,7 +27,7 @@ export function SubAccountsTab() {
       const normalizedRole: MemberRole =
         item.member_role?.toLowerCase() === "admin"
           ? "Admin"
-          : item.member_role?.toLowerCase() === "read_only"
+          : item.member_role?.toLowerCase() === "readonly"
           ? "Read-only"
           : item.member_role;
 
@@ -50,7 +50,7 @@ export function SubAccountsTab() {
   const handleSubmit = (values: { name: string; email: string; role: MemberRole }) => {
     if (!modal) return;
     if (modal.mode === "invite") {
-      inviteMutation.mutate({ ...values, role: values.role === "Read-only" ? "read_only" : "admin" }, {
+      inviteMutation.mutate({ ...values, role: values.role === "Read-only" ? "readonly" : "admin" }, {
         onSuccess: () => {
           setModal(null);
           toast.success(`Invite sent to ${values.email}`);
@@ -59,7 +59,7 @@ export function SubAccountsTab() {
       });
     } else if (modal.id !== undefined) {
       updateMutation.mutate(
-        { id: modal.id, ...values, role: values.role === "Read-only" ? "read_only" : "admin" },
+        { id: modal.id, ...values, role: values.role === "Read-only" ? "readonly" : "admin" },
         {
           onSuccess: () => {
             setModal(null);
