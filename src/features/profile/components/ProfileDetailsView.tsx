@@ -20,8 +20,8 @@ export function ProfileDetailsView({
         ["Email address", email],
         ["Phone number", phone],
         ["Company name", displayCompany === "—" ? undefined : displayCompany],
-        ["Timezone", displayTimezone === "—" ? undefined : displayTimezone],
-        ["Reporting currency", displayCurrency === "—" ? undefined : displayCurrency],
+        // ["Timezone", displayTimezone === "—" ? undefined : displayTimezone],
+        // ["Reporting currency", displayCurrency === "—" ? undefined : displayCurrency],
     ] as const;
 
     return (

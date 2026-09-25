@@ -91,7 +91,7 @@ export function CreativeTable() {
 
                 {/* Total filtered count & total spend summary */}
                 <span className="ml-auto font-mono text-[11.5px] text-fg-mute">
-                    {filteredRows.length} creatives · ₹{fmtC(displaySpend)} spend
+                    {filteredRows.length} creatives · {fmtC(displaySpend)} spend
                 </span>
             </div>
 

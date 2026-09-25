@@ -250,7 +250,7 @@ export function ReportCustomerProfilePanel({
                       LTV
                     </span>
                     <span className="text-[16px] font-bold text-fg font-mono mt-1 tabular-nums">
-                      ₹{fmtMoney(kpis?.ltv)}
+                      {fmtMoney(kpis?.ltv)}
                     </span>
                   </div>
                   {/* Total Orders */}
@@ -268,7 +268,7 @@ export function ReportCustomerProfilePanel({
                       Average Order Value
                     </span>
                     <span className="text-[16px] font-bold text-fg font-mono mt-1 tabular-nums">
-                      ₹{fmtMoney(kpis?.averageOrderValue)}
+                      {fmtMoney(kpis?.averageOrderValue)}
                     </span>
                   </div>
                   {/* Purchase Frequency */}
@@ -331,7 +331,7 @@ export function ReportCustomerProfilePanel({
                               </td>
                               <td className="px-4 py-2.5 text-fg-dim font-mono">{order?.date || '—'}</td>
                               <td className="px-4 py-2.5 text-right text-fg font-mono tabular-nums">
-                                ₹{fmtMoney(order?.amount)}
+                                {fmtMoney(order?.amount)}
                               </td>
                               <td className="px-4 py-2.5 text-fg-dim">{order?.channel || '—'}</td>
                               <td className="px-4 py-2.5">{getStatusBadge(order?.status)}</td>

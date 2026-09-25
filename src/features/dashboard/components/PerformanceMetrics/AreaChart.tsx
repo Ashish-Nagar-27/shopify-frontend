@@ -31,7 +31,7 @@ export const AreaSpark: FC<AreaSparkProps> = ({ data, color, id, metricKey }) =>
             return `${numVal.toFixed(2)}%`;
         }
         if (metricKey === "revenue" || metricKey === "spend") {
-            return `₹${fmtO(numVal)}`;
+            return `${fmtO(numVal)}`;
         }
 
         return fmtO(numVal);

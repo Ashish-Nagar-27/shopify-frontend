@@ -80,7 +80,7 @@ export function ProfileEditForm({
                     />
                 </div>
 
-                <div>
+                {/* <div>
                     <label className="mb-1.5 block text-xs text-fg-dim">Timezone</label>
                     <Select
                         value={form.timezone}
@@ -127,7 +127,7 @@ export function ProfileEditForm({
                     <div className="mt-[5px] text-[11px] text-fg-mute">
                         Ad spend and revenue are converted to this currency.
                     </div>
-                </div>
+                </div> */}
             </div>
 
             <div className="flex items-center justify-end gap-2.5 border-t border-border-soft bg-surface-2 px-[22px] py-4">

@@ -44,11 +44,11 @@ export const ChannelPerformanceTooltip: FC<ChannelPerformanceTooltipProps> = ({
                         <span className="h-[8px] w-[8px] rounded-full" style={{ background: color }} />
                         <span className="flex-1 text-[11px] text-fg-mute">{labelText}</span>
                         <span className="font-mono text-[12px] font-semibold text-fg">
-                            ₹{Math.round(numVal)}K
+                            {Math.round(numVal)}K
                         </span>
                     </div>
                 );
             })}
         </div>
     );
-};
+};

@@ -80,7 +80,7 @@ export const ChannelPerformanceChart: FC<ChannelPerformanceChartProps> = ({
                 <YAxis
                     domain={[0, allMax]}
                     ticks={[0, allMax * 0.2, allMax * 0.4, allMax * 0.6, allMax * 0.8, allMax]}
-                    tickFormatter={(v) => `₹${Math.round(v)}K`}
+                    tickFormatter={(v) => `${Math.round(v)}K`}
                     axisLine={false}
                     tickLine={false}
                     width={42}

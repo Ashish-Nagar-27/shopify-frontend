@@ -11,7 +11,7 @@ const METRIC_CONFIGS: Record<string, { label: string; unit?: string; suffix?: bo
     },
     revenue: {
         label: "Revenue",
-        unit: "₹",
+        unit: undefined,
         suffix: false,
         color: "var(--cyan)",
     },
@@ -23,7 +23,7 @@ const METRIC_CONFIGS: Record<string, { label: string; unit?: string; suffix?: bo
     },
     spend: {
         label: "Spend",
-        unit: "₹",
+        unit: undefined,
         suffix: false,
         color: "var(--magenta)",
     },

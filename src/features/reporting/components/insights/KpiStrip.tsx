@@ -133,7 +133,7 @@ export default function KpiStrips() {
   const KPISData = [
     {
       label: "Total Revenue",
-      unit: "₹",
+      unit: "",
       ...graphData?.total_revenue,
     },
     {
@@ -143,7 +143,7 @@ export default function KpiStrips() {
     },
     {
       label: "AOV",
-      unit: "₹",
+      unit: "",
       ...graphData?.aov,
     },
     {

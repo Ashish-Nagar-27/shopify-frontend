@@ -90,10 +90,10 @@ function renderCell(
   
   // Specific currency fields that have ₹ prefix (Revenue/Profit/AOV fields)
   if (lKey === 'rev' || lKey === 'revenue' || lKey.includes('profit') || lKey === 'cancelrev' || lKey === 'rrevenue' || lKey === 'nrevenue' || lKey === 'reported rev') {
-    return '₹' + fmt(v);
+    return '' + fmt(v);
   }
   if (lKey === 'aov' || lKey === 'naov' || lKey === 'ltv') {
-    return '₹' + fmtMoney(v);
+    return '' + fmtMoney(v);
   }
   
   // Other currency fields (Cost/Spend/CPA/CPC/CPM/CPL/eCPNV)
@@ -160,7 +160,7 @@ function renderTotal(key: string, rawRows: CampaignRow[]): React.ReactNode {
       return v.toFixed(1);
     }
     if (lKey === 'aov' || lKey === 'naov' || lKey === 'ltv') {
-      return '₹' + fmtMoney(v);
+      return '' + fmtMoney(v);
     }
     return fmtMoney(v);
   } else {
@@ -170,7 +170,7 @@ function renderTotal(key: string, rawRows: CampaignRow[]): React.ReactNode {
       sum += derived(r, key) || 0;
     });
     if (lKey === 'rev' || lKey === 'revenue' || lKey.includes('profit') || lKey === 'cancelrev' || lKey === 'rrevenue' || lKey === 'nrevenue' || lKey === 'reported rev') {
-      return '₹' + fmt(sum);
+      return '' + fmt(sum);
     }
     return fmt(sum);
   }

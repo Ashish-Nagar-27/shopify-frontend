@@ -86,9 +86,9 @@ export const ChannelMetrics: FC = () => {
                         <span>{fmtO(tot.clicks)}</span>
                         <span>{fmtO(tot.conv)}</span>
                         <span>{fmtO(tot.sales)}</span>
-                        <span>₹{tot.conv > 0 ? (tot.spend / tot.conv).toFixed(2) : "0.00"}</span>
-                        <span>₹{fmtO(tot.spend)}</span>
-                        <span>₹{fmtO(tot.rev)}</span>
+                        <span>{tot.conv > 0 ? (tot.spend / tot.conv).toFixed(2) : "0.00"}</span>
+                        <span>{fmtO(tot.spend)}</span>
+                        <span>{fmtO(tot.rev)}</span>
                         <span>{tot.spend > 0 ? (tot.rev / tot.spend).toFixed(2) : "0.00"}×</span>
                         <span>{tot.spend > 0 ? (tot.rev / tot.spend).toFixed(2) : "0.00"}</span>
                     </div>

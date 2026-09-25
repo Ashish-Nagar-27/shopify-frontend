@@ -151,7 +151,7 @@ const useChannelMetricsData = () => {
                 accessorKey: "cpa",
                 cell: ({ getValue }) => (
                     <span className="text-right font-mono text-[13px] text-fg-mute [font-variant-numeric:tabular-nums]">
-                        ₹{getValue<number>().toFixed(2)}
+                        {getValue<number>().toFixed(2)}
                     </span>
                 ),
             },
@@ -161,7 +161,7 @@ const useChannelMetricsData = () => {
                 accessorKey: "spend",
                 cell: ({ getValue }) => (
                     <span className="text-right font-mono text-[13px] text-fg-mute [font-variant-numeric:tabular-nums]">
-                        ₹{fmtO(getValue<number>())}
+                        {fmtO(getValue<number>())}
                     </span>
                 ),
             },
@@ -171,7 +171,7 @@ const useChannelMetricsData = () => {
                 accessorKey: "rev",
                 cell: ({ getValue }) => (
                     <span className="text-right font-mono text-[13px] text-fg [font-variant-numeric:tabular-nums]">
-                        ₹{fmtO(getValue<number>())}
+                        {fmtO(getValue<number>())}
                     </span>
                 ),
             },

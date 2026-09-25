@@ -33,12 +33,12 @@ export function ReportSelectionBar({
           <span className="inline-flex items-center gap-[10px] text-[12px] text-fg-dim pl-4 border-l border-[oklch(0.82_0.14_200/0.25)]">
             <span>
               <span className="text-[10px] text-fg-mute tracking-[0.10em] uppercase font-semibold mr-1">Spend</span>{' '}
-              <b className="text-fg font-mono font-bold">₹{selSummary.spend.toLocaleString()}</b>
+              <b className="text-fg font-mono font-bold">{selSummary.spend.toLocaleString()}</b>
             </span>
             <span className="text-fg-faint">·</span>
             <span>
               <span className="text-[10px] text-fg-mute tracking-[0.10em] uppercase font-semibold mr-1">Rev</span>{' '}
-              <b className="text-fg font-mono font-bold">₹{selSummary.rev.toLocaleString()}</b>
+              <b className="text-fg font-mono font-bold">{selSummary.rev.toLocaleString()}</b>
             </span>
             <span className="text-fg-faint">·</span>
             <span>

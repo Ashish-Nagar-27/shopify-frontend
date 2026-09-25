@@ -107,11 +107,11 @@ export function QuadrantChart() {
             <div className="mb-1.5 text-xs font-semibold text-fg">{hoverC.name}</div>
             <div className="flex items-center justify-between gap-3.5 py-[1.5px]">
               <span className="text-[11px] text-fg-mute">Spend</span>
-              <span className="font-mono text-[11.5px] text-fg">₹{fmtC(hoverC.spend)}</span>
+              <span className="font-mono text-[11.5px] text-fg">{fmtC(hoverC.spend)}</span>
             </div>
             <div className="flex items-center justify-between gap-3.5 py-[1.5px]">
               <span className="text-[11px] text-fg-mute">Revenue</span>
-              <span className="font-mono text-[11.5px] text-fg">₹{fmtC(hoverC.rev)}</span>
+              <span className="font-mono text-[11.5px] text-fg">{fmtC(hoverC.rev)}</span>
             </div>
             <div className="flex items-center justify-between gap-3.5 py-[1.5px]">
               <span className="text-[11px] text-fg-mute">ROAS</span>

@@ -303,7 +303,7 @@ export function useCreativeTableData() {
                     const spend = Number(row.original?.spend);
                     return (
                         <span className="font-mono text-[12.5px] text-fg tabular-nums">
-                            ₹{fmtC(isNaN(spend) ? 0 : spend)}
+                            {fmtC(isNaN(spend) ? 0 : spend)}
                         </span>
                     );
                 },
@@ -330,7 +330,7 @@ export function useCreativeTableData() {
                     const rev = Number(row.original?.rev);
                     return (
                         <span className="font-mono text-[12.5px] text-fg-mute tabular-nums">
-                            ₹{fmtC(isNaN(rev) ? 0 : rev)}
+                            {fmtC(isNaN(rev) ? 0 : rev)}
                         </span>
                     );
                 },
@@ -390,7 +390,7 @@ export function useCreativeTableData() {
                     const cpa = Number(row.original?.cpa);
                     return (
                         <span className="font-mono text-[12.5px] text-fg-mute tabular-nums">
-                            ₹{fmtC(isNaN(cpa) ? 0 : cpa)}
+                            {fmtC(isNaN(cpa) ? 0 : cpa)}
                         </span>
                     );
                 },

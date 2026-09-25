@@ -21,10 +21,10 @@ function getFormattedValForExcel(val: number, key: string): any {
     lKey === 'nrevenue' ||
     lKey === 'reported rev'
   ) {
-    return `₹${fmt(val)}`;
+    return `${fmt(val)}`;
   }
   if (lKey === 'aov' || lKey === 'naov' || lKey === 'ltv') {
-    return `₹${fmtMoney(val)}`;
+    return `${fmtMoney(val)}`;
   }
   if (
     lKey === 'spend' ||
